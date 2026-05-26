@@ -12,7 +12,9 @@ export default async function handler(
 
   if (
     typeof entityId !== "string" ||
-    (entityType !== "group" && entityType !== "organization")
+    (entityType !== "group" &&
+      entityType !== "organization" &&
+      entityType !== "dataset")
   ) {
     return res.status(400).json({ error: "Invalid activity query" });
   }

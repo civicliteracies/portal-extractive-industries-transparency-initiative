@@ -22,6 +22,35 @@ export type DatasetCardDataset = Pick<
   title: string | null;
 };
 
+export type DatasetDetailData = {
+  _name: string;
+  activity_stream?: unknown[];
+  activity_stream_has_more?: boolean;
+  author: string | null;
+  author_email: string | null;
+  groups: Array<{ title: string | null }>;
+  id: string;
+  metadata_created: string | null;
+  metadata_modified: string | null;
+  name: string;
+  notes: string | null;
+  organization: {
+    name: string;
+    title: string | null;
+  };
+  resources: Array<{
+    description: string | null;
+    format: string | null;
+    id: string;
+    iframe: boolean | null;
+    name: string | null;
+    url: string | null;
+  }>;
+  tags: Array<{ display_name: string | null; id: string }>;
+  title: string | null;
+  version: string | null;
+};
+
 export function trimDatasetCardData(
   datasets: Dataset[] = []
 ): DatasetCardDataset[] {
@@ -73,4 +102,38 @@ export function trimSearchOrganizations(
     name: org.name,
     title: org.title ?? null,
   }));
+}
+
+export function trimDatasetDetailData(dataset: Dataset & { _name: string }): DatasetDetailData {
+  return {
+    _name: dataset._name,
+    author: dataset.author ?? null,
+    author_email: dataset.author_email ?? null,
+    groups: (dataset.groups || []).map((group) => ({
+      title: group.title ?? null,
+    })),
+    id: dataset.id,
+    metadata_created: dataset.metadata_created ?? null,
+    metadata_modified: dataset.metadata_modified ?? null,
+    name: dataset.name,
+    notes: dataset.notes ?? null,
+    organization: {
+      name: dataset.organization.name,
+      title: dataset.organization.title ?? null,
+    },
+    resources: (dataset.resources || []).map((resource) => ({
+      description: resource.description ?? null,
+      format: resource.format ?? null,
+      id: resource.id,
+      iframe: "iframe" in resource ? resource.iframe ?? null : null,
+      name: resource.name ?? null,
+      url: resource.url ?? null,
+    })),
+    tags: (dataset.tags || []).map((tag) => ({
+      display_name: tag.display_name ?? null,
+      id: tag.id,
+    })),
+    title: dataset.title ?? null,
+    version: dataset.version ?? null,
+  };
 }

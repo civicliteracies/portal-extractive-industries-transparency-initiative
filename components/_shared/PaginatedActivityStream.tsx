@@ -10,7 +10,7 @@ export default function PaginatedActivityStream({
   limit,
 }: {
   entityId: string;
-  entityType: "group" | "organization";
+  entityType: "dataset" | "group" | "organization";
   initialActivities: Activity[];
   initialHasMore: boolean;
   limit: number;

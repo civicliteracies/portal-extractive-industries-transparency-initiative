@@ -5,7 +5,7 @@ import DatasetInfo from "@/components/dataset/individualPage/DatasetInfo";
 import DatasetOverview from "@/components/dataset/individualPage/DatasetOverview";
 import DatasetNavCrumbs from "@/components/dataset/individualPage/NavCrumbs";
 import ResourcesList from "@/components/dataset/individualPage/ResourcesList";
-import ActivityStream from "@/components/_shared/ActivityStream";
+import PaginatedActivityStream from "@/components/_shared/PaginatedActivityStream";
 import Layout from "@/components/_shared/Layout";
 import Tabs from "@/components/_shared/Tabs";
 import TopBar from "@/components/_shared/TopBar";
@@ -18,7 +18,11 @@ import {
   privateToPublicOrgName,
   publicToPrivateDatasetName,
 } from "@/lib/queries/utils";
+import { getActivityStreamPage } from "@/lib/queries/activity";
 import { getDataset } from "@/lib/queries/dataset";
+import { trimDatasetDetailData } from "@/lib/queries/pageData";
+
+const ACTIVITY_PAGE_SIZE = 20;
 
 export async function getStaticPaths() {
   const ckan = new CKAN(process.env.NEXT_PUBLIC_DMS);
@@ -58,12 +62,16 @@ export const getStaticProps: GetStaticProps = async (context) => {
         notFound: true,
       };
     }
-    const activityStream = await ckan.getDatasetActivityStream(
-      privateDatasetName
-    );
+    const activityStream = await getActivityStreamPage({
+      entityId: privateDatasetName,
+      entityType: "dataset",
+      limit: ACTIVITY_PAGE_SIZE,
+      offset: 0,
+    });
     dataset = {
-      ...dataset,
-      activity_stream: activityStream,
+      ...trimDatasetDetailData(dataset),
+      activity_stream: activityStream.activities,
+      activity_stream_has_more: activityStream.hasMore,
     };
     return {
       props: {
@@ -101,8 +109,12 @@ export default function DatasetPage({
     {
       id: "activity-stream",
       content: (
-        <ActivityStream
-          activities={dataset?.activity_stream ? dataset.activity_stream : []}
+        <PaginatedActivityStream
+          entityId={dataset._name}
+          entityType="dataset"
+          initialActivities={dataset?.activity_stream ? dataset.activity_stream : []}
+          initialHasMore={dataset?.activity_stream_has_more || false}
+          limit={ACTIVITY_PAGE_SIZE}
         />
       ),
       title: "Activity Stream",

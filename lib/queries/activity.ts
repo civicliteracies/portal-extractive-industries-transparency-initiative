@@ -3,7 +3,7 @@ import { Activity } from "@portaljs/ckan";
 
 const DEFAULT_ACTIVITY_LIMIT = 20;
 
-type ActivityEntityType = "group" | "organization";
+type ActivityEntityType = "dataset" | "group" | "organization";
 
 export function trimActivityStream(
   activities: Activity[] = [],
@@ -59,7 +59,9 @@ export async function getActivityStreamPage({
   const actionName =
     entityType === "group"
       ? "group_activity_list"
-      : "organization_activity_list";
+      : entityType === "organization"
+      ? "organization_activity_list"
+      : "package_activity_list";
 
   const response = await ky
     .get(
