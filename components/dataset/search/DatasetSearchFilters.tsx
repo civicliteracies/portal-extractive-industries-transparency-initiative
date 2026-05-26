@@ -1,10 +1,13 @@
 import { Field, Form, Formik, useFormikContext } from "formik";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Organization, PackageSearchOptions, Tag } from "@portaljs/ckan";
-import { Group } from "@portaljs/ckan";
+import { PackageSearchOptions, Tag } from "@portaljs/ckan";
 import useSWR from "swr";
 import { getAllGroups } from "@/lib/queries/groups";
 import { getAllOrganizations } from "@/lib/queries/orgs";
+import {
+  SearchGroupOption,
+  SearchOrganizationOption,
+} from "@/lib/queries/pageData";
 
 function AutoSubmit({
   setOptions,
@@ -35,8 +38,8 @@ export default function DatasetSearchFilters({
   setOptions,
   options,
 }: {
-  orgs: Array<Organization>;
-  groups: Array<Group>;
+  orgs: Array<SearchOrganizationOption>;
+  groups: Array<SearchGroupOption>;
   options: PackageSearchOptions;
   setOptions: Dispatch<SetStateAction<PackageSearchOptions>>;
 }) {

@@ -1,4 +1,6 @@
 import { Dataset } from "@portaljs/ckan";
+import { Group } from "@portaljs/ckan";
+import { Organization } from "@portaljs/ckan";
 
 export type DatasetCardDataset = Pick<
   Dataset,
@@ -38,5 +40,37 @@ export function trimDatasetCardData(
       name: resource.name ?? null,
     })),
     title: dataset.title ?? null,
+  }));
+}
+
+export type SearchGroupOption = {
+  display_name: string | null;
+  id: string;
+  name: string;
+};
+
+export type SearchOrganizationOption = {
+  display_name: string | null;
+  id: string;
+  name: string;
+  title: string | null;
+};
+
+export function trimSearchGroups(groups: Group[] = []): SearchGroupOption[] {
+  return groups.map((group) => ({
+    display_name: group.display_name ?? null,
+    id: group.id,
+    name: group.name,
+  }));
+}
+
+export function trimSearchOrganizations(
+  orgs: Organization[] = []
+): SearchOrganizationOption[] {
+  return orgs.map((org) => ({
+    display_name: org.display_name ?? null,
+    id: org.id,
+    name: org.name,
+    title: org.title ?? null,
   }));
 }

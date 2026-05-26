@@ -1,10 +1,13 @@
 import { Field, Form, Formik } from "formik";
 import { Dispatch, SetStateAction } from "react";
-import { Organization, PackageSearchOptions } from "@portaljs/ckan";
-import { Group } from "@portaljs/ckan";
+import { PackageSearchOptions } from "@portaljs/ckan";
 import useSWR from "swr";
 import { getAllGroups } from "@/lib/queries/groups";
 import { getAllOrganizations } from "@/lib/queries/orgs";
+import {
+  SearchGroupOption,
+  SearchOrganizationOption,
+} from "@/lib/queries/pageData";
 
 export default function DatasetSearchForm({
   groups,
@@ -12,8 +15,8 @@ export default function DatasetSearchForm({
   setOptions,
   options,
 }: {
-  groups: Array<Group>;
-  orgs: Array<Organization>;
+  groups: Array<SearchGroupOption>;
+  orgs: Array<SearchOrganizationOption>;
   options: PackageSearchOptions;
   setOptions: Dispatch<SetStateAction<PackageSearchOptions>>;
 }) {

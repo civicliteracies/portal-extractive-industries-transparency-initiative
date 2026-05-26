@@ -12,6 +12,11 @@ import ListOfDatasets from "@/components/dataset/search/ListOfDatasets";
 import { searchDatasets } from "@/lib/queries/dataset";
 import { getAllGroups } from "@/lib/queries/groups";
 import { getAllOrganizations } from "@/lib/queries/orgs";
+import {
+  trimDatasetCardData,
+  trimSearchGroups,
+  trimSearchOrganizations,
+} from "@/lib/queries/pageData";
 
 const mainOrg = process.env.NEXT_PUBLIC_ORG;
 
@@ -37,10 +42,13 @@ export async function getStaticProps() {
             groups: [],
             orgs: [],
           },
-        ])]: search_result,
+        ])]: {
+          count: search_result.count,
+          datasets: trimDatasetCardData(search_result.datasets),
+        },
       },
-      groups,
-      orgs,
+      groups: trimSearchGroups(groups),
+      orgs: trimSearchOrganizations(orgs),
     },
     revalidate: 1800,
   };
