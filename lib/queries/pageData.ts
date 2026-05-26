@@ -2,12 +2,22 @@ import { Dataset } from "@portaljs/ckan";
 
 export type DatasetCardDataset = Pick<
   Dataset,
-  "id" | "metadata_created" | "name" | "notes" | "title"
+  "id" | "name"
 > & {
-  organization: Pick<Dataset["organization"], "name" | "title">;
+  metadata_created: string | null;
+  notes: string | null;
+  organization: {
+    name: string;
+    title: string | null;
+  };
   resources: Array<
-    Pick<Dataset["resources"][number], "format" | "id" | "name">
+    {
+      format: string | null;
+      id: string;
+      name: string | null;
+    }
   >;
+  title: string | null;
 };
 
 export function trimDatasetCardData(
@@ -15,18 +25,18 @@ export function trimDatasetCardData(
 ): DatasetCardDataset[] {
   return datasets.map((dataset) => ({
     id: dataset.id,
-    metadata_created: dataset.metadata_created,
+    metadata_created: dataset.metadata_created ?? null,
     name: dataset.name,
-    notes: dataset.notes,
+    notes: dataset.notes ?? null,
     organization: {
       name: dataset.organization.name,
-      title: dataset.organization.title,
+      title: dataset.organization.title ?? null,
     },
     resources: (dataset.resources || []).map((resource) => ({
-      format: resource.format,
+      format: resource.format ?? null,
       id: resource.id,
-      name: resource.name,
+      name: resource.name ?? null,
     })),
-    title: dataset.title,
+    title: dataset.title ?? null,
   }));
 }
