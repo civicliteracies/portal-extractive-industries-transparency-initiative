@@ -8,6 +8,7 @@ import TopBar from "@/components/_shared/TopBar";
 import PaginatedActivityStream from "@/components/_shared/PaginatedActivityStream";
 import PaginatedDatasetSection from "@/components/_shared/PaginatedDatasetSection";
 import { getActivityStreamPage } from "@/lib/queries/activity";
+import { trimDatasetCardData } from "@/lib/queries/pageData";
 import styles from "styles/DatasetInfo.module.scss";
 import { CKAN, Organization } from "@portaljs/ckan";
 import { getAllOrganizations, getOrganization } from "@/lib/queries/orgs";
@@ -49,7 +50,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   org = {
     ...org,
     package_count: packageSearch.count,
-    packages: packageSearch.datasets,
+    packages: trimDatasetCardData(packageSearch.datasets),
   };
   if (!org) {
     return {

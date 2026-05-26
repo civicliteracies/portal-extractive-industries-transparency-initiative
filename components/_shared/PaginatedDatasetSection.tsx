@@ -1,4 +1,3 @@
-import { Dataset } from "@portaljs/ckan";
 import { useState } from "react";
 import useSWR from "swr";
 import DatasetList from "./DatasetList";
@@ -7,6 +6,7 @@ import {
   searchGroupDatasets,
   searchOrganizationDatasets,
 } from "@/lib/queries/dataset";
+import { DatasetCardDataset, trimDatasetCardData } from "@/lib/queries/pageData";
 
 export default function PaginatedDatasetSection({
   count,
@@ -17,7 +17,7 @@ export default function PaginatedDatasetSection({
   type,
 }: {
   count: number;
-  datasets: Dataset[];
+  datasets: DatasetCardDataset[];
   limit: number;
   offset: number;
   name: string;
@@ -29,18 +29,28 @@ export default function PaginatedDatasetSection({
     [type, name, currentOffset, limit],
     async () => {
       if (type === "group") {
-        return searchGroupDatasets({
+        const result = await searchGroupDatasets({
           group: name,
           offset: currentOffset,
           limit,
         });
+
+        return {
+          count: result.count,
+          datasets: trimDatasetCardData(result.datasets),
+        };
       }
 
-      return searchOrganizationDatasets({
+      const result = await searchOrganizationDatasets({
         org: name,
         offset: currentOffset,
         limit,
       });
+
+      return {
+        count: result.count,
+        datasets: trimDatasetCardData(result.datasets),
+      };
     },
     {
       fallbackData: {

@@ -10,6 +10,7 @@ import styles from "@/styles/DatasetInfo.module.scss";
 import GroupNavCrumbs from "../../components/groups/individualPage/GroupNavCrumbs";
 import GroupInfo from "../../components/groups/individualPage/GroupInfo";
 import { getActivityStreamPage } from "@/lib/queries/activity";
+import { trimDatasetCardData } from "@/lib/queries/pageData";
 import { getAllGroups, getGroup } from "@/lib/queries/groups";
 import { searchGroupDatasets } from "@/lib/queries/dataset";
 
@@ -48,7 +49,7 @@ export const getStaticProps: GetStaticProps = async (context) => {
   group = {
     ...group,
     package_count: packageSearch.count,
-    packages: packageSearch.datasets,
+    packages: trimDatasetCardData(packageSearch.datasets),
   };
   if (!group) {
     return {
