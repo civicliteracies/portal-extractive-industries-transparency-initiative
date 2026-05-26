@@ -1,4 +1,8 @@
-import { CKAN, Organization, PackageSearchOptions } from "@portaljs/ckan";
+import {
+  CKAN,
+  Organization,
+  PackageSearchOptions,
+} from "@portaljs/ckan";
 import {
   CkanResponse,
   getAvailableOrgs,
@@ -58,6 +62,42 @@ export async function searchDatasets(input: PackageSearchOptions) {
   });
 
   return { datasets: results, count: datasets.count };
+}
+
+export async function searchGroupDatasets({
+  group,
+  offset,
+  limit,
+}: {
+  group: string;
+  offset: number;
+  limit: number;
+}) {
+  return searchDatasets({
+    groups: [group],
+    orgs: [],
+    tags: [],
+    offset,
+    limit,
+  });
+}
+
+export async function searchOrganizationDatasets({
+  org,
+  offset,
+  limit,
+}: {
+  org: string;
+  offset: number;
+  limit: number;
+}) {
+  return searchDatasets({
+    groups: [],
+    orgs: [org],
+    tags: [],
+    offset,
+    limit,
+  });
 }
 
 export const getDataset = async ({ name }: { name: string }) => {

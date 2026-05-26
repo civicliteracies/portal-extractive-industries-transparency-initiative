@@ -1,16 +1,18 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
-import DatasetList from "../../components/_shared/DatasetList";
 import ActivityStream from "../../components/_shared/ActivityStream";
 import Layout from "../../components/_shared/Layout";
 import Tabs from "../../components/_shared/Tabs";
 import TopBar from "../../components/_shared/TopBar";
+import PaginatedDatasetSection from "../../components/_shared/PaginatedDatasetSection";
 import { CKAN, Group } from "@portaljs/ckan";
 import styles from "@/styles/DatasetInfo.module.scss";
 import GroupNavCrumbs from "../../components/groups/individualPage/GroupNavCrumbs";
 import GroupInfo from "../../components/groups/individualPage/GroupInfo";
 import { getAllGroups, getGroup } from "@/lib/queries/groups";
-import { getDataset } from "@/lib/queries/dataset";
+import { searchGroupDatasets } from "@/lib/queries/dataset";
+
+const DATASETS_PER_PAGE = 10;
 
 export async function getStaticPaths() {
   const paths = (await getAllGroups({ detailed: false })).map(
@@ -35,14 +37,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
   }
   let group = await getGroup({
     name: groupName as string,
-    include_datasets: true,
   });
-  if (group.packages) {
-    const packagesWithResources = await Promise.all(
-      group.packages.map(async (dataset) => getDataset({ name: dataset.name }))
-    );
-    group = { ...group, packages: packagesWithResources };
-  }
+  const packageSearch = await searchGroupDatasets({
+    group: groupName as string,
+    offset: 0,
+    limit: DATASETS_PER_PAGE,
+  });
+  group = {
+    ...group,
+    package_count: packageSearch.count,
+    packages: packageSearch.datasets,
+  };
   const activityStream = await ckan.getGroupActivityStream(group._name);
   if (!group) {
     return {
@@ -65,7 +70,14 @@ export default function OrgPage({
     {
       id: "datasets",
       content: group.packages ? (
-        <DatasetList datasets={group.packages ? group.packages : []} />
+        <PaginatedDatasetSection
+          count={group.package_count || 0}
+          datasets={group.packages || []}
+          limit={DATASETS_PER_PAGE}
+          offset={0}
+          name={group.name}
+          type="group"
+        />
       ) : (
         ""
       ),

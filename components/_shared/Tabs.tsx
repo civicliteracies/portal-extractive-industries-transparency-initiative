@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React from "react";
 import { Tab } from "@headlessui/react";
 interface TabProps {
   items: Array<{ title: string; content: React.ReactNode; id: string }>;

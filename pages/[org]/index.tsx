@@ -6,11 +6,13 @@ import ActivityStream from "@/components/_shared/ActivityStream";
 import Layout from "@/components/_shared/Layout";
 import Tabs from "@/components/_shared/Tabs";
 import TopBar from "@/components/_shared/TopBar";
+import PaginatedDatasetSection from "@/components/_shared/PaginatedDatasetSection";
 import styles from "styles/DatasetInfo.module.scss";
-import DatasetList from "@/components/_shared/DatasetList";
 import { CKAN, Organization } from "@portaljs/ckan";
 import { getAllOrganizations, getOrganization } from "@/lib/queries/orgs";
-import { getDataset } from "@/lib/queries/dataset";
+import { searchOrganizationDatasets } from "@/lib/queries/dataset";
+
+const DATASETS_PER_PAGE = 10;
 
 export async function getStaticPaths() {
   const paths = (await getAllOrganizations({ detailed: false })).map(
@@ -36,16 +38,17 @@ export const getStaticProps: GetStaticProps = async (context) => {
   orgName = orgName.includes("@") ? orgName.split("@")[1] : orgName;
   let org = await getOrganization({
     name: orgName as string,
-    include_datasets: true,
   });
-  if (org.packages) {
-    const packagesWithResources = await Promise.all(
-      org.packages.map(
-        async (dataset) => await getDataset({ name: dataset.name })
-      )
-    );
-    org = { ...org, packages: packagesWithResources };
-  }
+  const packageSearch = await searchOrganizationDatasets({
+    org: orgName as string,
+    offset: 0,
+    limit: DATASETS_PER_PAGE,
+  });
+  org = {
+    ...org,
+    package_count: packageSearch.count,
+    packages: packageSearch.datasets,
+  };
   const activityStream = await ckan.getOrgActivityStream(org._name);
   if (!org) {
     return {
@@ -68,7 +71,14 @@ export default function OrgPage({
     {
       id: "datasets",
       content: org.packages ? (
-        <DatasetList datasets={org.packages ? org.packages : []} />
+        <PaginatedDatasetSection
+          count={org.package_count || 0}
+          datasets={org.packages || []}
+          limit={DATASETS_PER_PAGE}
+          offset={0}
+          name={org.name}
+          type="organization"
+        />
       ) : (
         ""
       ),
