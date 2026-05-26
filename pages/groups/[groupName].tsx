@@ -1,18 +1,20 @@
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
-import ActivityStream from "../../components/_shared/ActivityStream";
 import Layout from "../../components/_shared/Layout";
 import Tabs from "../../components/_shared/Tabs";
 import TopBar from "../../components/_shared/TopBar";
 import PaginatedDatasetSection from "../../components/_shared/PaginatedDatasetSection";
+import PaginatedActivityStream from "../../components/_shared/PaginatedActivityStream";
 import { CKAN, Group } from "@portaljs/ckan";
 import styles from "@/styles/DatasetInfo.module.scss";
 import GroupNavCrumbs from "../../components/groups/individualPage/GroupNavCrumbs";
 import GroupInfo from "../../components/groups/individualPage/GroupInfo";
+import { getActivityStreamPage } from "@/lib/queries/activity";
 import { getAllGroups, getGroup } from "@/lib/queries/groups";
 import { searchGroupDatasets } from "@/lib/queries/dataset";
 
 const DATASETS_PER_PAGE = 10;
+const ACTIVITY_PAGE_SIZE = 20;
 
 export async function getStaticPaths() {
   const paths = (await getAllGroups({ detailed: false })).map(
@@ -48,13 +50,22 @@ export const getStaticProps: GetStaticProps = async (context) => {
     package_count: packageSearch.count,
     packages: packageSearch.datasets,
   };
-  const activityStream = await ckan.getGroupActivityStream(group._name);
   if (!group) {
     return {
       notFound: true,
     };
   }
-  group = { ...group, activity_stream: activityStream };
+  const activityStream = await getActivityStreamPage({
+    entityId: group._name,
+    entityType: "group",
+    limit: ACTIVITY_PAGE_SIZE,
+    offset: 0,
+  });
+  group = {
+    ...group,
+    activity_stream: activityStream.activities,
+    activity_stream_has_more: activityStream.hasMore,
+  };
   return {
     props: {
       group,
@@ -86,8 +97,12 @@ export default function OrgPage({
     {
       id: "activity-stream",
       content: (
-        <ActivityStream
-          activities={group?.activity_stream ? group.activity_stream : []}
+        <PaginatedActivityStream
+          entityId={group._name}
+          entityType="group"
+          initialActivities={group?.activity_stream ? group.activity_stream : []}
+          initialHasMore={group?.activity_stream_has_more || false}
+          limit={ACTIVITY_PAGE_SIZE}
         />
       ),
       title: "Activity Stream",

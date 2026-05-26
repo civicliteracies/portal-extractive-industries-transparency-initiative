@@ -1,12 +1,17 @@
 import { format } from "timeago.js";
 import { Activity } from "@portaljs/ckan";
+import React from "react";
 
 interface ActivityStreamProps {
   activities: Array<Activity>;
+  footer?: React.ReactNode;
 }
-export default function ActivityStream({ activities }: ActivityStreamProps) {
+export default function ActivityStream({
+  activities,
+  footer,
+}: ActivityStreamProps) {
   return (
-    <div className="py-8 w-full h-[50vh]">
+    <div className="py-8 w-full h-[50vh] overflow-y-auto">
       {activities.map((activity: Activity) => (
         <div key={activity.id}>
           <div className="flex flex-row items-start mb-10">
@@ -46,6 +51,7 @@ export default function ActivityStream({ activities }: ActivityStreamProps) {
           </div>
         </div>
       ))}
+      {footer && <div className="pt-2">{footer}</div>}
     </div>
   );
 }

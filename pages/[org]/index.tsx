@@ -2,17 +2,19 @@ import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import OrgNavCrumbs from "@/components/organization/individualPage/OrgNavCrumbs";
 import OrgInfo from "@/components/organization/individualPage/OrgInfo";
-import ActivityStream from "@/components/_shared/ActivityStream";
 import Layout from "@/components/_shared/Layout";
 import Tabs from "@/components/_shared/Tabs";
 import TopBar from "@/components/_shared/TopBar";
+import PaginatedActivityStream from "@/components/_shared/PaginatedActivityStream";
 import PaginatedDatasetSection from "@/components/_shared/PaginatedDatasetSection";
+import { getActivityStreamPage } from "@/lib/queries/activity";
 import styles from "styles/DatasetInfo.module.scss";
 import { CKAN, Organization } from "@portaljs/ckan";
 import { getAllOrganizations, getOrganization } from "@/lib/queries/orgs";
 import { searchOrganizationDatasets } from "@/lib/queries/dataset";
 
 const DATASETS_PER_PAGE = 10;
+const ACTIVITY_PAGE_SIZE = 20;
 
 export async function getStaticPaths() {
   const paths = (await getAllOrganizations({ detailed: false })).map(
@@ -49,13 +51,22 @@ export const getStaticProps: GetStaticProps = async (context) => {
     package_count: packageSearch.count,
     packages: packageSearch.datasets,
   };
-  const activityStream = await ckan.getOrgActivityStream(org._name);
   if (!org) {
     return {
       notFound: true,
     };
   }
-  org = { ...org, activity_stream: activityStream };
+  const activityStream = await getActivityStreamPage({
+    entityId: org._name,
+    entityType: "organization",
+    limit: ACTIVITY_PAGE_SIZE,
+    offset: 0,
+  });
+  org = {
+    ...org,
+    activity_stream: activityStream.activities,
+    activity_stream_has_more: activityStream.hasMore,
+  };
   return {
     props: {
       org,
@@ -87,8 +98,12 @@ export default function OrgPage({
     {
       id: "activity-stream",
       content: (
-        <ActivityStream
-          activities={org?.activity_stream ? org.activity_stream : []}
+        <PaginatedActivityStream
+          entityId={org._name}
+          entityType="organization"
+          initialActivities={org?.activity_stream ? org.activity_stream : []}
+          initialHasMore={org?.activity_stream_has_more || false}
+          limit={ACTIVITY_PAGE_SIZE}
         />
       ),
       title: "Activity Stream",
