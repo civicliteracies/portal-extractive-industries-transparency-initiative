@@ -2,12 +2,15 @@ import Link from "next/link";
 import { Dataset } from "@portaljs/ckan";
 
 type DatasetLinkProps = Pick<Dataset, "title" | "metadata_modified">;
+type PopularDataset = Pick<Dataset, "id" | "metadata_modified" | "name" | "title"> & {
+  organization: Pick<Dataset["organization"], "name">;
+};
 
 //  Name is "PopularDatasets" but content is "Recent Datasets" - Parametrize this
 export default function PopularDatasets({
   datasets,
 }: {
-  datasets: Array<Dataset>;
+  datasets: Array<PopularDataset>;
 }) {
   return (
     <div className="bg-white p-8 rounded-lg shadow-lg h-full">

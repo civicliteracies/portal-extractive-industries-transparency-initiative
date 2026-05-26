@@ -33,7 +33,6 @@ export default function Hero({ stats }: { stats: StatsProps }) {
               <div className="sm:max-w-lg py-4 lg:pb-12 sm:py-0">
                 <Stats
                   datasetCount={stats.datasetCount}
-                  orgCount={stats.orgCount}
                   groupCount={stats.groupCount}
                 />
               </div>

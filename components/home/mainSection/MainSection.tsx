@@ -1,14 +1,25 @@
-import { Dataset } from "@portaljs/ckan";
-import { Group } from "@portaljs/ckan";
+import { Dataset, Group } from "@portaljs/ckan";
 import GroupCard from "../../groups/GroupCard";
 import PopularDatasets from "./PopularDatasets";
+
+type MainSectionDataset = Pick<
+  Dataset,
+  "id" | "metadata_modified" | "name" | "title"
+> & {
+  organization: Pick<Dataset["organization"], "name">;
+};
+
+type MainSectionGroup = Pick<
+  Group,
+  "description" | "display_name" | "id" | "image_display_url" | "name"
+>;
 
 export default function MainSection({
   groups,
   datasets,
 }: {
-  groups: Array<Group>;
-  datasets: Array<Dataset>;
+  groups: Array<MainSectionGroup>;
+  datasets: Array<MainSectionDataset>;
 }) {
   return (
     <section className="custom-container homepage-padding">
@@ -17,7 +28,7 @@ export default function MainSection({
           <PopularDatasets datasets={datasets} />
         </section>
         <section className="col-span-1 grid sm:grid-cols-2 gap-4 md:pl-2">
-          {groups.slice(0, 4).map((group) => (
+          {groups.map((group) => (
             <article key={group.id} className="col-span-1">
               <GroupCard
                 description={group.description}

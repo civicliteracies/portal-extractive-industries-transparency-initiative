@@ -1,14 +1,9 @@
 export interface StatsProps {
   datasetCount: number;
-  orgCount: number;
   groupCount: number;
 }
 
-const Stats: React.FC<StatsProps> = ({
-  datasetCount,
-  orgCount,
-  groupCount,
-}) => {
+const Stats: React.FC<StatsProps> = ({ datasetCount, groupCount }) => {
   const stats = [
     {
       name: "Datasets",
