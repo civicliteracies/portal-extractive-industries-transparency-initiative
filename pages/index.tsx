@@ -21,14 +21,10 @@ type HomepageGroup = Pick<
 >;
 
 export async function getStaticProps() {
-  const datasets = await searchDatasets({
-    offset: 0,
-    limit: 5,
-    tags: [],
-    groups: [],
-    orgs: [],
-  });
-  const groups = await getAllGroups({ detailed: true });
+  const [datasets, groups] = await Promise.all([
+    searchDatasets({ offset: 0, limit: 5, tags: [], groups: [], orgs: [] }),
+    getAllGroups({ detailed: true }),
+  ]);
   const featuredGroups: HomepageGroup[] = groups.slice(0, 4).map((group) => ({
     description: group.description,
     display_name: group.display_name,

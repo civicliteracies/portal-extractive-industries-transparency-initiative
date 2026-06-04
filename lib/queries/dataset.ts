@@ -5,7 +5,6 @@ import {
 } from "@portaljs/ckan";
 import {
   CkanResponse,
-  getAvailableOrgs,
   privateToPublicDatasetName,
   privateToPublicOrgName,
   publicToPrivateDatasetName,
@@ -13,55 +12,68 @@ import {
 import ky from "ky";
 
 export async function searchDatasets(input: PackageSearchOptions) {
-  const ckan = new CKAN(process.env.NEXT_PUBLIC_DMS);
   const mainOrg = process.env.NEXT_PUBLIC_ORG;
   const mainGroup = `${mainOrg}-group`;
+  const dms = process.env.NEXT_PUBLIC_DMS;
 
-  //  Add the main group prefix before querying
-  if (input.groups) {
-    input.groups = input.groups.map((g) => `${mainGroup}--${g}`);
-  }
+  const groups = (input.groups ?? []).map((g) => `${mainGroup}--${g}`);
+  const tags = input.tags ?? [];
 
-  let orgs: string[] = [];
+  let fqParts: string[] = [];
+  if (groups.length > 0) fqParts.push(`groups:(${groups.join(" OR ")})`);
+  if (tags.length > 0) fqParts.push(`tags:(${tags.join(" OR ")})`);
+
+  const searchParams: Record<string, string> = {
+    rows: String(input.limit ?? 10),
+    start: String(input.offset ?? 0),
+    sort: "metadata_modified desc",
+  };
+  if (fqParts.length > 0) searchParams.fq = fqParts.join(" AND ");
+
+  let baseUrl: string;
   if (input.orgs && input.orgs.length > 0) {
-    const mainOrgPrefix = `${mainOrg}--`;
-    orgs = input.orgs?.map((g) => {
-      if (g == mainOrg) {
-        return g;
-      }
-      return `${mainOrgPrefix}${g}`;
-    });
+    // Searching specific orgs — use direct CKAN API with org filter
+    const orgNames = input.orgs.map((o) =>
+      o === mainOrg ? o : `${mainOrg}--${o}`
+    );
+    fqParts.push(`organization:(${orgNames.join(" OR ")})`);
+    searchParams.fq = fqParts.join(" AND ");
+    baseUrl = `${dms}/api/3/action/package_search`;
   } else {
-    orgs = await getAvailableOrgs(mainOrg);
+    // No org filter — use portal-scoped API (scoped to this portal automatically)
+    baseUrl = `${dms}/@${mainOrg}/api/3/action/package_search`;
   }
 
-  const datasets = await ckan.packageSearch({
-    ...input,
-    orgs,
-  });
+  const response: CkanResponse<{ results: any[]; count: number }> = await ky
+    .get(baseUrl, { searchParams, timeout: false })
+    .json();
 
-  //  Remove the main group prefix from the groups names
-  //  Remove the main org prefix from the owner_org name
-  const results = datasets.datasets.map((d) => {
-    const mainGroupPrefix = `${mainGroup}--`;
-    const mainOrgPrefix = `${mainOrg}--`;
-    const groups = d?.groups?.map((g) => {
-      const name = g.name.slice(mainGroupPrefix.length);
+  const mainGroupPrefix = `${mainGroup}--`;
+  const mainOrgPrefix = `${mainOrg}--`;
 
-      return { ...g, name };
-    });
-    const owner_org =
-      d.organization.name === mainOrg
+  const datasets = response.result.results.map((d) => {
+    const dGroups = d?.groups?.map((g: any) => ({
+      ...g,
+      name: g.name.startsWith(mainGroupPrefix)
+        ? g.name.slice(mainGroupPrefix.length)
+        : g.name,
+    }));
+    const orgName = d.organization?.name;
+    const publicOrgName =
+      orgName === mainOrg
         ? mainOrg
-        : d.organization.name.slice(mainOrgPrefix.length);
-    const organization = { ...d.organization, name: owner_org };
-
-    const publicName = privateToPublicDatasetName(d.name, mainOrg);
-
-    return { ...d, organization, name: publicName, groups };
+        : orgName?.startsWith(mainOrgPrefix)
+        ? orgName.slice(mainOrgPrefix.length)
+        : orgName;
+    return {
+      ...d,
+      name: privateToPublicDatasetName(d.name, mainOrg),
+      organization: { ...d.organization, name: publicOrgName },
+      groups: dGroups,
+    };
   });
 
-  return { datasets: results, count: datasets.count };
+  return { datasets, count: response.result.count };
 }
 
 export async function searchGroupDatasets({

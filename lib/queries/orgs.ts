@@ -15,11 +15,12 @@ export const getOrganization = async ({
   include_datasets?: boolean;
 }) => {
   const mainOrg = process.env.NEXT_PUBLIC_ORG;
+  const dms = process.env.NEXT_PUBLIC_DMS;
   const privateName = publicToPrivateOrgName(name, mainOrg);
 
   const organization: CkanResponse<Organization> = await ky
     .get(
-      `https://demo.dev.datopian.com/api/3/action/organization_show?id=${privateName}&include_datasets=${include_datasets}`
+      `${dms}/api/3/action/organization_show?id=${privateName}&include_datasets=${include_datasets}`
     )
     .json();
 
@@ -40,52 +41,19 @@ export const getOrganization = async ({
 };
 
 export const getAllOrganizations = async ({
-  detailed = true, // Whether to add organization_show or not
+  detailed = true,
 }: {
   detailed?: boolean;
 }) => {
   const mainOrg = process.env.NEXT_PUBLIC_ORG;
-  /*
-   * Get hierarchy from root org
-   *
-   */
-  const organizationsTree: CkanResponse<
-    Organization & { children: Organization[]; _name: string }
-  > = await ky
-    .get(
-      `https://demo.dev.datopian.com/api/3/action/group_tree_section?type=organization&id=${mainOrg}`
-    )
+  const dms = process.env.NEXT_PUBLIC_DMS;
+
+  const response: CkanResponse<Organization[]> = await ky
+    .get(`${dms}/@${mainOrg}/api/3/action/organization_list?all_fields=true`)
     .json();
 
-  /*
-   * Flatten orgs hierarchy, fix name and preserve
-   * internal name as `_name`
-   *
-   */
-  const { children, ...parent } = organizationsTree.result;
-
-  let organizations = children.map((c) => {
-    const publicName = privateToPublicOrgName(c.name, mainOrg);
-    return { ...c, name: publicName, _name: c.name };
-  });
-
-  organizations.unshift({ ...parent, _name: parent.name });
-
-  /*
-   * Get details for each org
-   *
-   */
-  if (organizations && detailed) {
-    organizations = await Promise.all(
-      organizations.map(async (o) => {
-        const orgDetails = await getOrganization({
-          name: o.name,
-        });
-
-        return { ...o, ...orgDetails, name: o.name, _name: o._name };
-      })
-    );
-  }
-
-  return organizations;
+  return response.result.map((o) => ({
+    ...o,
+    _name: publicToPrivateOrgName(o.name, mainOrg),
+  }));
 };

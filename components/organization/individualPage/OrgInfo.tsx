@@ -1,5 +1,6 @@
-import getConfig from "next/config";
 import Image from "next/image";
+
+const ALLOWED_IMAGE_DOMAINS = ["demo.dev.datopian.com", "admin.opendatani.gov.uk"];
 import { format } from "timeago.js";
 import { Tag } from "ckan";
 import { Organization } from "ckan";
@@ -21,7 +22,7 @@ export default function OrgInfo({
           src={
             org.image_display_url &&
             url &&
-            getConfig().publicRuntimeConfig.DOMAINS.includes(url.hostname)
+            ALLOWED_IMAGE_DOMAINS.includes(url.hostname)
               ? org.image_display_url
               : "/images/logos/DefaultOrgLogo.svg"
           }
