@@ -7,24 +7,28 @@ import { CKAN } from "@portaljs/ckan";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Resource } from "@/interfaces/dataset";
+import type { PdfViewerProps } from "@/components/viewers/PdfViewer";
+import type { ExcelProps } from "@/components/viewers/Excel";
+import type { FlatUiTableProps } from "@/components/viewers/FlatUiTable";
+import type { MapProps } from "@/components/viewers/Map";
 
-const PdfViewer = dynamic(
-  () => import("@portaljs/components").then((mod) => mod.PdfViewer),
+const PdfViewer = dynamic<PdfViewerProps>(
+  () => import("@/components/viewers/PdfViewer").then((mod) => ({ default: mod.PdfViewer })),
   { ssr: false }
 );
 
-const ExcelViewer = dynamic(
-  () => import("@portaljs/components").then((mod) => mod.Excel),
+const ExcelViewer = dynamic<ExcelProps>(
+  () => import("@/components/viewers/Excel").then((mod) => ({ default: mod.Excel })),
   { ssr: false }
 );
 
-const RawCsvViewer = dynamic(
-  () => import("@portaljs/components").then((mod) => mod.FlatUiTable),
+const RawCsvViewer = dynamic<FlatUiTableProps>(
+  () => import("@/components/viewers/FlatUiTable").then((mod) => ({ default: mod.FlatUiTable })),
   { ssr: false }
 );
 
-const MapViewer = dynamic(
-  () => import("@portaljs/components").then((mod) => mod.Map),
+const MapViewer = dynamic<MapProps>(
+  () => import("@/components/viewers/Map").then((mod) => ({ default: mod.Map })),
   { ssr: false }
 );
 

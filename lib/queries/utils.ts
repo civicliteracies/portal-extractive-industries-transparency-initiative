@@ -83,16 +83,9 @@ export const privateToPublicOrgName = (
 };
 
 export const getAvailableOrgs = async (mainOrg: string) => {
-  const organizationsTree: CkanResponse<
-    Organization & { children: Organization[] }
-  > = await ky
-    .get(
-      `https://demo.dev.datopian.com/api/3/action/group_tree_section?type=organization&id=${mainOrg}`
-    )
+  const dms = process.env.NEXT_PUBLIC_DMS;
+  const response: CkanResponse<Organization[]> = await ky
+    .get(`${dms}/@${mainOrg}/api/3/action/organization_list?all_fields=true`)
     .json();
-
-  const { children, ...parent } = organizationsTree.result;
-  const orgsList = children;
-  orgsList.unshift(parent);
-  return orgsList.map((o) => o.name);
+  return response.result.map((o) => o.name);
 };
