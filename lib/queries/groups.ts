@@ -1,26 +1,17 @@
-import { Dataset, Group } from "@portaljs/ckan";
-import {
-  CkanResponse,
-  privateToPublicDatasetName,
-  privateToPublicGroupName,
-  privateToPublicOrgName,
-  publicToPrivateGroupName,
-} from "./utils";
-import ky from "ky";
+import { Group } from "@portaljs/ckan";
+import CkanRequest, { CkanResponse } from "@portaljs/ckan-api-client-js";
 
-export const getAllGroups = async ({
-  detailed = true,
-}: {
-  detailed: boolean;
-}) => {
-  const mainOrg = process.env.NEXT_PUBLIC_ORG;
-  const dms = process.env.NEXT_PUBLIC_DMS;
+const DMS = process.env.NEXT_PUBLIC_DMS;
 
-  const response: CkanResponse<Group[]> = await ky
-    .get(`${dms}/@${mainOrg}/api/3/action/group_list?all_fields=true`)
-    .json();
+export const getAllGroups = async () => {
+    const groups = await CkanRequest.get<CkanResponse<Group[]>>(
+      `group_list?all_fields=True`,
+      {
+        ckanUrl: DMS,
+      }
+    );
 
-  return response.result;
+    return groups.result
 };
 
 export const getGroup = async ({
@@ -30,34 +21,10 @@ export const getGroup = async ({
   name: string;
   include_datasets?: boolean;
 }) => {
-  const mainOrg = process.env.NEXT_PUBLIC_ORG;
-  const mainGroup = `${mainOrg}-group`;
-  const dms = process.env.NEXT_PUBLIC_DMS;
-  const privateName = publicToPrivateGroupName(name, mainGroup);
+  const group = await CkanRequest.get<CkanResponse<Group>>(
+    `group_show?id=${name}&include_datasets=${include_datasets}`,
+    { ckanUrl: DMS }
+  );
 
-  const group: CkanResponse<Group> = await ky
-    .get(
-      `${dms}/api/3/action/group_show?id=${privateName}&include_datasets=${include_datasets}`
-    )
-    .json();
-
-  if (include_datasets) {
-    group.result.packages.forEach((dataset: Dataset) => {
-      const publicOrgName = privateToPublicOrgName(
-        dataset.organization.name,
-        mainOrg
-      );
-      dataset.organization.name = publicOrgName;
-
-      const publicDatasetName = privateToPublicDatasetName(
-        dataset.name,
-        mainOrg
-      );
-      dataset.name = publicDatasetName;
-    });
-  }
-
-  const publicName = privateToPublicGroupName(group.result.name, mainGroup);
-
-  return { ...group.result, name: publicName, _name: group.result.name };
+  return group.result
 };

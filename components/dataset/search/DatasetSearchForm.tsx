@@ -1,93 +1,39 @@
-import { Field, Form, Formik } from "formik";
-import { Dispatch, SetStateAction } from "react";
-import { PackageSearchOptions } from "@portaljs/ckan";
-import useSWR from "swr";
-import { getAllGroups } from "@/lib/queries/groups";
-import { getAllOrganizations } from "@/lib/queries/orgs";
-import {
-  SearchGroupOption,
-  SearchOrganizationOption,
-} from "@/lib/queries/pageData";
+import {  useState } from "react";
+import { useTheme } from "@/components/theme/theme-provider";
+import { useSearchState } from "./SearchContext";
 
-export default function DatasetSearchForm({
-  groups,
-  orgs,
-  setOptions,
-  options,
-}: {
-  groups: Array<SearchGroupOption>;
-  orgs: Array<SearchOrganizationOption>;
-  options: PackageSearchOptions;
-  setOptions: Dispatch<SetStateAction<PackageSearchOptions>>;
-}) {
-  const { data: groupsData } = useSWR('groups', () => {
-    return getAllGroups({ detailed: true });
-  }, { fallbackData: groups})
-  const { data: orgsData } = useSWR('orgs', () => {
-    return getAllOrganizations({ detailed: true });
-  }, { fallbackData: orgs })
+export default function DatasetSearchForm() {
+  const { theme } = useTheme();
+  const { setOptions, options } = useSearchState();
+  const [q, setQ] = useState(options.query ?? "");
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setOptions({
+      query: q,
+    });
+    return false;
+  };
+
   return (
-    <Formik
-      initialValues={{
-        org: "",
-        group: "",
-        query: options.query ? options.query : "",
-      }}
-      enableReinitialize={true}
-      onSubmit={async (values) => {
-        const org = orgsData.find((org) => org.title === values.org);
-        const group = groupsData.find(
-          (group) => group.display_name === values.group
-        );
-        setOptions({
-          ...options,
-          groups: group ? [group.name] : [],
-          orgs: org ? [org.name] : [],
-          query: values.query,
-        });
-      }}
-    >
-      <div className="mx-auto" style={{ width: "min(1100px, 95vw)" }}>
-        <Form className="min-h-[80px] flex flex-col lg:flex-row bg-white px-5 py-3 rounded-xl">
-          <Field
-            type="text"
-            placeholder="Search Datasets"
-            className="mx-4 grow py-4 border-0 placeholder:text-neutral-400"
-            name="query"
-          />
-          <Field
-            list="groups"
-            name="group"
-            placeholder="Groups"
-            className="lg:border-l p-4 mx-2 placeholder:text-neutral-400"
-          ></Field>
+    <form className="" onSubmit={handleSubmit}>
+      <div className="min-h-[70px] flex flex-col lg:flex-row bg-white pr-5 py-3 rounded-xl">
+        <input
+          type="text"
+          placeholder="Type in keyword..."
+          className="mx-4 grow py-3 border-0 placeholder:text-neutral-400 outline-0"
+          name="query"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          aria-label="Search datasets"
+        />
 
-          <datalist aria-label="Formats" id="groups">
-            <option value="">Group</option>
-            {groups.map((group, index) => (
-              <option key={index}>{group.display_name}</option>
-            ))}
-          </datalist>
-          <Field
-            list="orgs"
-            name="org"
-            placeholder="Organization"
-            className="lg:border-l p-4 mx-2 placeholder:text-neutral-400"
-          ></Field>
-          <datalist aria-label="Formats" id="orgs">
-            <option value="">Organization</option>
-            {orgsData.map((org, index) => (
-              <option key={index}>{org.title}</option>
-            ))}
-          </datalist>
-          <button
-            className="font-bold text-black px-12 py-4 rounded-lg bg-accent hover:bg-cyan-500 duration-150"
-            type="submit"
-          >
-            SEARCH
-          </button>
-        </Form>
+        <button
+          className={`font-bold border-b-[4px] border-accent text-white px-12 py-3 rounded-lg bg-accent hover:bg-cyan-500 duration-150 ${theme.styles.bgDark}`}
+          type="submit"
+        >
+          SEARCH
+        </button>
       </div>
-    </Formik>
+    </form>
   );
 }

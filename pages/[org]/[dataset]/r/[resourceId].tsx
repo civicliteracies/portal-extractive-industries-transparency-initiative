@@ -1,38 +1,41 @@
-import { GetStaticProps } from "next";
-import { format } from "timeago.js";
-import ResourceCard from "@/components/dataset/_shared/ResourceCard";
+import { GetServerSideProps } from "next";
 import Layout from "@/components/_shared/Layout";
-import TopBar from "@/components/_shared/TopBar";
+import { Resource } from "@portaljs/ckan";
 import { CKAN } from "@portaljs/ckan";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Resource } from "@/interfaces/dataset";
-import type { PdfViewerProps } from "@/components/viewers/PdfViewer";
-import type { ExcelProps } from "@/components/viewers/Excel";
-import type { FlatUiTableProps } from "@/components/viewers/FlatUiTable";
-import type { MapProps } from "@/components/viewers/Map";
+import { useRouter } from "next/router";
+import { RiArrowLeftLine } from "react-icons/ri";
+import ResourcesBadges from "@/components/dataset/_shared/ResourcesBadges";
+import { PrimeReactProvider } from "primereact/api";
+import ResponsiveGridData from "@/components/responsiveGrid";
+import { getTimeAgo } from "@/lib/utils";
+import { ResourcePageStructuredData } from "@/components/schema/ResourcePageStructuredData";
 
-const PdfViewer = dynamic<PdfViewerProps>(
-  () => import("@/components/viewers/PdfViewer").then((mod) => ({ default: mod.PdfViewer })),
+const PdfViewer = dynamic(
+  () => import("@portaljs/components").then((mod) => mod.PdfViewer),
   { ssr: false }
 );
 
-const ExcelViewer = dynamic<ExcelProps>(
-  () => import("@/components/viewers/Excel").then((mod) => ({ default: mod.Excel })),
+const ExcelViewer = dynamic(
+  () => import("@portaljs/components").then((mod) => mod.Excel),
   { ssr: false }
 );
 
-const RawCsvViewer = dynamic<FlatUiTableProps>(
-  () => import("@/components/viewers/FlatUiTable").then((mod) => ({ default: mod.FlatUiTable })),
+const MapViewer = dynamic(
+  () => import("@portaljs/components").then((mod) => mod.Map),
   { ssr: false }
 );
 
-const MapViewer = dynamic<MapProps>(
-  () => import("@/components/viewers/Map").then((mod) => ({ default: mod.Map })),
-  { ssr: false }
-);
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  let orgName = context.params?.org as string;
+  if (!orgName.startsWith("@")) {
+    return {
+      notFound: true,
+    };
+  }
+  orgName = orgName.split("@")[1];
 
-export const getServerSideProps: GetStaticProps = async (context) => {
   const DMS = process.env.NEXT_PUBLIC_DMS;
   const ckan = new CKAN(DMS);
   try {
@@ -53,7 +56,7 @@ export const getServerSideProps: GetStaticProps = async (context) => {
     }
 
     return {
-      props: { resource },
+      props: { resource, orgName },
     };
   } catch (e) {
     console.log(e);
@@ -65,34 +68,47 @@ export const getServerSideProps: GetStaticProps = async (context) => {
 
 export default function ResourcePage({
   resource,
+  orgName
 }: {
   resource: Resource;
+  orgName: string
 }): JSX.Element {
   const resourceFormat = resource.format.toLowerCase();
+  const router = useRouter();
+  const { dataset } = router.query;
+
   return (
-    <>
+    <PrimeReactProvider>
+      <ResourcePageStructuredData resource={resource} orgName={orgName} dataset={dataset} />
       <Layout>
-        <div className="grid grid-rows-datasetpage-hero">
-          <section className="row-start-1 row-end-3 col-span-full">
-            <div
-              className="bg-cover h-full bg-center bg-no-repeat bg-black flex flex-col"
-              style={{
-                backgroundImage: "url('/images/backgrounds/SearchHero.avif')",
-                marginBottom: "4rem",
-              }}
-            >
-              <TopBar />
-            </div>
-          </section>
-          <section className="grid row-start-2 row-span-2 col-span-full pb-16">
-            <div className="custom-container bg-[#fcfcfc] lg:px-4 py-8 rounded">
-              <div className="flex items-center gap-x-4 custom-container">
-                <ResourceCard small resource={resource} />
-                <h1 className="text-4xl truncate max-w-xs sm:max-w-sm lg:max-w-lg">
+        <div className="custom-container pt-[30px]">
+          <Link
+            href={`/@${orgName}/${dataset}`}
+            className="flex items-center  text-sm"
+          >
+            <RiArrowLeftLine className="text-[32px]" />
+            <span className="sr-only">Go back</span>
+          </Link>
+          <div
+            className="bg-cover bg-center bg-no-repeat flex flex-col"
+            style={{}}
+          >
+            <div className={` bg-white`}>
+              <div className="col-span-1">
+                <h1 className="text-[24px] md:text-[50px] font-black lg:max-w-[80%]">
                   {resource.name}
                 </h1>
               </div>
-              <div className="flex gap-x-2 items-center custom-container py-2">
+            </div>
+          </div>
+          <div className="mt-4">
+            <ResourcesBadges resources={[resource]} />
+          </div>
+        </div>
+        <div className="">
+          <section className=" pb-16">
+            <div className="py-2 custom-container ">
+              <div className="flex flex-col  md:flex-row gap-4 md:items-center py-2">
                 <span className="font-medium text-gray-500 inline">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +124,8 @@ export default function ResourcePage({
                       d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
                     />
                   </svg>
-                  Created: {resource.created && format(resource.created)}
+                  Created: {resource.created &&
+                    getTimeAgo(resource.created)}
                 </span>
                 <span className="font-medium text-gray-500 inline">
                   <svg
@@ -127,7 +144,7 @@ export default function ResourcePage({
                   </svg>
                   Updated:{" "}
                   {resource.metadata_modified &&
-                    format(resource.metadata_modified)}
+                    getTimeAgo(resource.metadata_modified)}
                 </span>
                 <span className="font-medium text-gray-500 inline">
                   <svg
@@ -147,10 +164,10 @@ export default function ResourcePage({
                   Size: {resource.size || "N/A"}
                 </span>
               </div>
-              <div className="custom-container py-4">
+              <div className=" py-4">
                 <Link
                   href={resource.url}
-                  className="bg-accent h-auto py-2 px-4 text-sm text-gray-800 rounded-xl font-roboto font-bold hover:bg-cyan-800 hover:text-white duration-150 flex items-center gap-1 w-fit"
+                  className="bg-accent h-auto py-2 px-4 text-sm text-white rounded-xl font-roboto font-bold hover:bg-darkaccent hover:text-white duration-150 flex items-center gap-1 w-fit"
                 >
                   Download
                   <svg
@@ -169,14 +186,12 @@ export default function ResourcePage({
                   </svg>
                 </Link>
               </div>
-              <div className="custom-container py-4">
+              <div className="py-4">
                 <p className="text-stone-500">{resource.description}</p>
               </div>
-              <div className="lg:px-8">
+              <div className="">
                 {resourceFormat == "csv" ? (
-                  <div>
-                    <RawCsvViewer url={resource.url} />
-                  </div>
+                  <ResponsiveGridData dataUrl={resource.url} />
                 ) : null}
                 {resourceFormat == "pdf" && (
                   <PdfViewer
@@ -188,7 +203,7 @@ export default function ResourcePage({
                 {["xlsx", "xls"].includes(resourceFormat) && (
                   <ExcelViewer url={resource.url} />
                 )}
-                {resourceFormat == "geojson" && (
+                {resourceFormat?.toLocaleLowerCase() == "geojson" && (
                   <MapViewer
                     layers={[{ data: resource.url, name: "Geojson" }]}
                     title={resource.name}
@@ -205,6 +220,6 @@ export default function ResourcePage({
           </section>
         </div>
       </Layout>
-    </>
+    </PrimeReactProvider>
   );
 }

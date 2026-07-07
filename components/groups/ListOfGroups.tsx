@@ -1,15 +1,15 @@
-import MiniSearch from "minisearch";
-import { Group } from "@portaljs/ckan";
-import GroupCard from "./GroupCard";
+import MiniSearch from 'minisearch'
+import { Group } from '@portaljs/ckan'
+import GroupCard from './GroupCard'
 
 export default function ListOfGroups({
   groups,
   searchString,
   miniSearch,
 }: {
-  groups: Array<Group>;
-  searchString: string;
-  miniSearch: MiniSearch<any>;
+  groups: Array<Group>
+  searchString: string
+  miniSearch: MiniSearch<any>
 }) {
   //We only do search when the string is different from ""
   //Because otherwise minichsearch gives an empty list
@@ -21,12 +21,12 @@ export default function ListOfGroups({
       {groups.map((group) => (
         <div
           className={`col-span-1 ${
-            searchString !== "" &&
+            searchString !== '' &&
             !miniSearch
               .search(searchString, { prefix: true })
               .find((result) => result.id === group.id)
-              ? "hidden"
-              : "block"
+              ? 'hidden'
+              : 'block'
           }`}
           key={group.id}
         >
@@ -39,5 +39,5 @@ export default function ListOfGroups({
         </div>
       ))}
     </section>
-  );
+  )
 }

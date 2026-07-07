@@ -1,110 +1,83 @@
-import { GetStaticProps, InferGetStaticPropsType } from "next";
+import { GetServerSideProps } from "next";
 import Head from "next/head";
 import OrgNavCrumbs from "@/components/organization/individualPage/OrgNavCrumbs";
 import OrgInfo from "@/components/organization/individualPage/OrgInfo";
+import ActivityStream from "@/components/_shared/ActivityStream";
 import Layout from "@/components/_shared/Layout";
 import Tabs from "@/components/_shared/Tabs";
-import TopBar from "@/components/_shared/TopBar";
-import PaginatedActivityStream from "@/components/_shared/PaginatedActivityStream";
-import PaginatedDatasetSection from "@/components/_shared/PaginatedDatasetSection";
-import { getActivityStreamPage } from "@/lib/queries/activity";
-import { trimDatasetCardData } from "@/lib/queries/pageData";
 import styles from "styles/DatasetInfo.module.scss";
-import { CKAN, Organization } from "@portaljs/ckan";
-import { getAllOrganizations, getOrganization } from "@/lib/queries/orgs";
-import { searchOrganizationDatasets } from "@/lib/queries/dataset";
+import DatasetList from "@/components/_shared/DatasetList";
+import { CKAN } from "@portaljs/ckan";
+import { getOrganization } from "@/lib/queries/orgs";
+import { getDataset } from "@/lib/queries/dataset";
+import { searchDatasets } from "@/lib/queries/dataset";
 
-const DATASETS_PER_PAGE = 10;
-const ACTIVITY_PAGE_SIZE = 20;
+import HeroSection from "@/components/_shared/HeroSection";
+import { OrganizationIndividualPageStructuredData } from "@/components/schema/OrganizationIndividualPageStructuredData";
 
-export async function getStaticPaths() {
-  const paths = (await getAllOrganizations({ detailed: false })).map(
-    (org: Organization) => ({
-      params: { org: org.name },
-    })
-  );
-  return {
-    paths,
-    fallback: "blocking",
-  };
-}
-
-export const getStaticProps: GetStaticProps = async (context) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const DMS = process.env.NEXT_PUBLIC_DMS;
   const ckan = new CKAN(DMS);
   let orgName = context.params?.org as string;
-  if (!orgName) {
+  if (!orgName || !orgName.startsWith("@")) {
     return {
       notFound: true,
     };
   }
-  orgName = orgName.includes("@") ? orgName.split("@")[1] : orgName;
+  orgName = orgName.split("@")[1];
   let org = await getOrganization({
     name: orgName as string,
+    include_datasets: false,
   });
-  const packageSearch = await searchOrganizationDatasets({
-    org: orgName as string,
-    offset: 0,
-    limit: DATASETS_PER_PAGE,
-  });
-  org = {
-    ...org,
-    package_count: packageSearch.count,
-    packages: trimDatasetCardData(packageSearch.datasets),
-  };
+
+  console.log("Fetched organization:", org);
+
+  let initialDatasets = null
+
+  if (org.package_count) {
+    initialDatasets = await searchDatasets({
+      fq: `owner_org:${org.id}`,
+      offset: 0,
+      limit: 10,
+      type: "dataset",
+      query: "",
+      sort: "metadata_modified desc",
+      groups: [],
+      orgs: [],
+      tags: [],
+      resFormat: [],
+    });
+  }
+
+  const activityStream = await ckan.getOrgActivityStream(org.name);
   if (!org) {
     return {
       notFound: true,
     };
   }
-  const activityStream = await getActivityStreamPage({
-    entityId: org._name,
-    entityType: "organization",
-    limit: ACTIVITY_PAGE_SIZE,
-    offset: 0,
-  });
-  org = {
-    ...org,
-    activity_stream: activityStream.activities,
-    activity_stream_has_more: activityStream.hasMore,
-  };
+  org = { ...org, activity_stream: activityStream};
   return {
     props: {
       org,
+      initialDatasets,
     },
-    revalidate: 1800,
   };
 };
 
-export default function OrgPage({
-  org,
-}: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
+export default function OrgPage({ org, initialDatasets }): JSX.Element {
   const tabs = [
     {
       id: "datasets",
-      content: org.packages ? (
-        <PaginatedDatasetSection
-          count={org.package_count || 0}
-          datasets={org.packages || []}
-          limit={DATASETS_PER_PAGE}
-          offset={0}
-          name={org.name}
-          type="organization"
-        />
-      ) : (
-        ""
+      content: (
+        <DatasetList type="organization" name={org.id} initialDatasets={initialDatasets} />
       ),
       title: "Datasets",
     },
     {
-      id: "activity-stream",
+      id: "activity-stream",  
       content: (
-        <PaginatedActivityStream
-          entityId={org._name}
-          entityType="organization"
-          initialActivities={org?.activity_stream ? org.activity_stream : []}
-          initialHasMore={org?.activity_stream_has_more || false}
-          limit={ACTIVITY_PAGE_SIZE}
+        <ActivityStream
+          activities={org?.activity_stream ? org.activity_stream : []}
         />
       ),
       title: "Activity Stream",
@@ -112,40 +85,17 @@ export default function OrgPage({
   ];
   return (
     <>
-      <Head>
-        <title>{org.title || org.name + " - Organization Page"}</title>
-        <meta name="description" content="Generated by create next app" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <OrganizationIndividualPageStructuredData org={org} />
       {org && (
         <Layout>
-          <div className="grid grid-rows-datasetpage-hero">
-            <section className="row-start-1 row-end-3 col-span-full">
-              <div
-                className="bg-cover h-full bg-center bg-no-repeat bg-black flex flex-col"
-                style={{
-                  backgroundImage: "url('/images/backgrounds/SearchHero.avif')",
-                }}
-              >
-                <TopBar />
-                <OrgNavCrumbs
-                  org={{
-                    name: org?.name,
-                    title: org?.title,
-                  }}
-                />
-                <div
-                  className="grid mx-auto items-center grow custom-container grow"
-                  style={{ marginBlock: "8rem" }}
-                >
-                  <div className="col-span-1">
-                    <h1 className="text-6xl font-black text-white">
-                      {org.title}
-                    </h1>
-                  </div>
-                </div>
-              </div>
-            </section>
+          <HeroSection title={org.title} cols="6" />
+          <OrgNavCrumbs
+            org={{
+              name: org?.name,
+              title: org?.title,
+            }}
+          />
+          <div className="grid mt-8 grid-rows-datasetpage-hero">
             <section className="grid row-start-2 row-span-2 col-span-full">
               <div className="custom-container">
                 {org && (
