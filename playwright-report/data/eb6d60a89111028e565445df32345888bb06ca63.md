@@ -1,0 +1,282 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e3]:
+    - link "Skip to main content" [ref=e4] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=e5]:
+      - banner [ref=e6]:
+        - navigation "Global" [ref=e7]:
+          - generic [ref=e8]:
+            - generic [ref=e9]: EITI Open Data Portal
+            - link "EITI" [ref=e10] [cursor=pointer]:
+              - /url: /
+              - img "EITI" [ref=e11]
+            - generic [ref=e12]:
+              - text: Open Data
+              - text: Portal
+          - generic [ref=e13]:
+            - link "Search" [ref=e14] [cursor=pointer]:
+              - /url: /search
+            - link "Organizations" [ref=e15] [cursor=pointer]:
+              - /url: /organizations
+            - link "Groups" [ref=e16] [cursor=pointer]:
+              - /url: /groups
+      - main [ref=e18]:
+        - generic [ref=e19]:
+          - generic [ref=e20]:
+            - link "Back to dataset" [ref=e21] [cursor=pointer]:
+              - /url: /@eiti-myanmar/fy2015-2016-myanmar-eiti-report
+              - img [ref=e22]
+              - generic [ref=e24]: Back to dataset
+            - heading "FY2015-2016 Myanmar EITI Report Annex_21_-_participation_of_me2_in_the_mining_jvs" [level=1] [ref=e26]
+            - generic [ref=e29]: XLSX
+          - generic [ref=e32]:
+            - generic [ref=e33]:
+              - generic [ref=e34]:
+                - img [ref=e35]
+                - text: "Created: 1 month ago"
+              - generic [ref=e37]:
+                - img [ref=e38]
+                - text: "Updated: 1 month ago"
+              - generic [ref=e40]:
+                - img [ref=e41]
+                - text: "Size: 60280"
+            - link "Download" [ref=e44] [cursor=pointer]:
+              - /url: https://blob.datopian.com/resources/c9992c80-ec91-4e06-95c3-6608d7ca6ba8/FY2015-2016-Myanmar-EITI-Report-Annex_21_-_participation_of_me2_in_the_mining_jvs-22d6f7.xlsx
+              - text: Download
+              - img [ref=e45]
+            - paragraph [ref=e48]: The FY2015-2016 Myanmar EITI Report Annex_21_-_participation_of_me2_in_the_mining_jvs provides structured data on revenues and payments collected from the extractive sector in Myanmar for the fiscal year FY2015-2016, as disclosed through the Extractive Industries Transparency Initiative (EITI) process.
+            - generic [ref=e50]:
+              - generic [ref=e52]:
+                - treegrid [ref=e53]:
+                  - rowgroup [ref=e54]:
+                    - row "A B C D E F G" [ref=e55]:
+                      - columnheader "A" [ref=e56]:
+                        - text: 
+                        - generic [ref=e57]: 
+                        - generic [ref=e58] [cursor=pointer]: A
+                        - text: 
+                        - generic:    
+                      - columnheader "B" [ref=e59]:
+                        - text: 
+                        - generic [ref=e60]: 
+                        - generic [ref=e61] [cursor=pointer]: B
+                        - text: 
+                        - generic:    
+                      - columnheader "C" [ref=e62]:
+                        - text: 
+                        - generic [ref=e63]: 
+                        - generic [ref=e64] [cursor=pointer]: C
+                        - text: 
+                        - generic:    
+                      - columnheader "D" [ref=e65]:
+                        - text: 
+                        - generic [ref=e66]: 
+                        - generic [ref=e67] [cursor=pointer]: D
+                        - text: 
+                        - generic:    
+                      - columnheader "E" [ref=e68]:
+                        - text: 
+                        - generic [ref=e69]: 
+                        - generic [ref=e70] [cursor=pointer]: E
+                        - text: 
+                        - generic:    
+                      - columnheader "F" [ref=e71]:
+                        - text: 
+                        - generic [ref=e72]: 
+                        - generic [ref=e73] [cursor=pointer]: F
+                        - text: 
+                        - generic:    
+                      - columnheader "G" [ref=e74]:
+                        - text: 
+                        - generic [ref=e75]: 
+                        - generic [ref=e76] [cursor=pointer]: G
+                        - text: 
+                        - generic:    
+                  - rowgroup [ref=e77]:
+                    - row "Code/Ref License holder Type of License PSC ratio Date of award Expiry date Commodity" [ref=e78]:
+                      - gridcell "Code/Ref" [ref=e79]
+                      - gridcell "License holder" [ref=e80]
+                      - gridcell "Type of License" [ref=e81]
+                      - gridcell "PSC ratio" [ref=e82]
+                      - gridcell "Date of award" [ref=e83]
+                      - gridcell "Expiry date" [ref=e84]
+                      - gridcell "Commodity" [ref=e85]
+                    - 'row "5/1999 22/2019 Myanmar Pongpipat Co.,L td production 35 : 65 1.7.1999 30.6.2019 Tin/ Tungsten mixed Ore" [ref=e86]':
+                      - gridcell "5/1999 22/2019" [ref=e87]
+                      - gridcell "Myanmar Pongpipat Co.,L td" [ref=e88]
+                      - gridcell "production" [ref=e89]
+                      - 'gridcell "35 : 65" [ref=e90]'
+                      - gridcell "1.7.1999" [ref=e91]
+                      - gridcell "30.6.2019" [ref=e92]
+                      - gridcell "Tin/ Tungsten mixed Ore" [ref=e93]
+                    - 'row "8/2004 Silver Bright Co,Lt d production 32.8 : 67.2 12.8.2004 11.8.2019 Tin/ Tungsten Mixed Ore" [ref=e94]':
+                      - gridcell "8/2004" [ref=e95]
+                      - gridcell "Silver Bright Co,Lt d" [ref=e96]
+                      - gridcell "production" [ref=e97]
+                      - 'gridcell "32.8 : 67.2" [ref=e98]'
+                      - gridcell "12.8.2004" [ref=e99]
+                      - gridcell "11.8.2019" [ref=e100]
+                      - gridcell "Tin/ Tungsten Mixed Ore" [ref=e101]
+                    - 'row "0002/2015 Mining World Co.,Ltd production 32.8 : 67.2 12.1.2015 11.2.2025 Tin/ Tungsten Mixed Ore" [ref=e102]':
+                      - gridcell "0002/2015" [ref=e103]
+                      - gridcell "Mining World Co.,Ltd" [ref=e104]
+                      - gridcell "production" [ref=e105]
+                      - 'gridcell "32.8 : 67.2" [ref=e106]'
+                      - gridcell "12.1.2015" [ref=e107]
+                      - gridcell "11.2.2025" [ref=e108]
+                      - gridcell "Tin/ Tungsten Mixed Ore" [ref=e109]
+                    - 'row "2/2002 A&A, Natural Resources Development Co,Lt d production 32.8 : 67.2 28.2.2002 27.2.2017 Tin/ Tungsten Mixed Ore" [ref=e110]':
+                      - gridcell "2/2002" [ref=e111]
+                      - gridcell "A&A, Natural Resources Development Co,Lt d" [ref=e112]
+                      - gridcell "production" [ref=e113]
+                      - 'gridcell "32.8 : 67.2" [ref=e114]'
+                      - gridcell "28.2.2002" [ref=e115]
+                      - gridcell "27.2.2017" [ref=e116]
+                      - gridcell "Tin/ Tungsten Mixed Ore" [ref=e117]
+                    - 'row "0001/2010 Delco Co.,Ltd production 32.8 : 67.2 5.1.2010 4.1.2020 Tin/ Tungsten Mixed Ore" [ref=e118]':
+                      - gridcell "0001/2010" [ref=e119]
+                      - gridcell "Delco Co.,Ltd" [ref=e120]
+                      - gridcell "production" [ref=e121]
+                      - 'gridcell "32.8 : 67.2" [ref=e122]'
+                      - gridcell "5.1.2010" [ref=e123]
+                      - gridcell "4.1.2020" [ref=e124]
+                      - gridcell "Tin/ Tungsten Mixed Ore" [ref=e125]
+                    - 'row "27/1999 Myanmar Tin and Tungsten Co.,Ltd production 30 : 70 1.12.1999 30.11.2019 Tin/ Tungsten Mixed Ore" [ref=e126]':
+                      - gridcell "27/1999" [ref=e127]
+                      - gridcell "Myanmar Tin and Tungsten Co.,Ltd" [ref=e128]
+                      - gridcell "production" [ref=e129]
+                      - 'gridcell "30 : 70" [ref=e130]'
+                      - gridcell "1.12.1999" [ref=e131]
+                      - gridcell "30.11.2019" [ref=e132]
+                      - gridcell "Tin/ Tungsten Mixed Ore" [ref=e133]
+                    - 'row "008/2012 Diamond Shark Mining Co., Ltd production 32.8 : 67.2 25.4.2012 24.4.2022 Tin/ Tungsten Mixed Ore" [ref=e134]':
+                      - gridcell "008/2012" [ref=e135]
+                      - gridcell "Diamond Shark Mining Co., Ltd" [ref=e136]
+                      - gridcell "production" [ref=e137]
+                      - 'gridcell "32.8 : 67.2" [ref=e138]'
+                      - gridcell "25.4.2012" [ref=e139]
+                      - gridcell "24.4.2022" [ref=e140]
+                      - gridcell "Tin/ Tungsten Mixed Ore" [ref=e141]
+                    - 'row "0004/2013 Ngwe Ka Ba Myanmar Co.,Ltd production 32.8 : 67.2 9.5.2013 8.5.2023 Tin/ Tungsten Mixed Ore" [ref=e142]':
+                      - gridcell "0004/2013" [ref=e143]
+                      - gridcell "Ngwe Ka Ba Myanmar Co.,Ltd" [ref=e144]
+                      - gridcell "production" [ref=e145]
+                      - 'gridcell "32.8 : 67.2" [ref=e146]'
+                      - gridcell "9.5.2013" [ref=e147]
+                      - gridcell "8.5.2023" [ref=e148]
+                      - gridcell "Tin/ Tungsten Mixed Ore" [ref=e149]
+                    - 'row "37/2000 Ngwe Ka Ba Myanmar Co.,Ltd production 32.8 : 67.2 1.11.2000 30.10.2015 Tin/ Tungsten Mixed Ore" [ref=e150]':
+                      - gridcell "37/2000" [ref=e151]
+                      - gridcell "Ngwe Ka Ba Myanmar Co.,Ltd" [ref=e152]
+                      - gridcell "production" [ref=e153]
+                      - 'gridcell "32.8 : 67.2" [ref=e154]'
+                      - gridcell "1.11.2000" [ref=e155]
+                      - gridcell "30.10.2015" [ref=e156]
+                      - gridcell "Tin/ Tungsten Mixed Ore" [ref=e157]
+                    - 'row "0001/2016 Shwe Pinle Mining & Industry Co.,Ltd production 32.8 : 67.2 28.12.2015 27.12.2025 Tin/ Tungsten Mixed Ore" [ref=e158]':
+                      - gridcell "0001/2016" [ref=e159]
+                      - gridcell "Shwe Pinle Mining & Industry Co.,Ltd" [ref=e160]
+                      - gridcell "production" [ref=e161]
+                      - 'gridcell "32.8 : 67.2" [ref=e162]'
+                      - gridcell "28.12.2015" [ref=e163]
+                      - gridcell "27.12.2025" [ref=e164]
+                      - gridcell "Tin/ Tungsten Mixed Ore" [ref=e165]
+                    - 'row "1/2002 Kayar Mine Production Co., Ltd production 30 : 70 28.2.2002 27.2.2019 Tin/Tungsten Sheelite/ Mixed" [ref=e166]':
+                      - gridcell "1/2002" [ref=e167]
+                      - gridcell "Kayar Mine Production Co., Ltd" [ref=e168]
+                      - gridcell "production" [ref=e169]
+                      - 'gridcell "30 : 70" [ref=e170]'
+                      - gridcell "28.2.2002" [ref=e171]
+                      - gridcell "27.2.2019" [ref=e172]
+                      - gridcell "Tin/Tungsten Sheelite/ Mixed" [ref=e173]
+                    - 'row "0026/2010 Eastern Mining Co., Ltd production 32.8 : 67.2 3.2.2010 2.2.2017 Tin/Tungsten Mixed" [ref=e174]':
+                      - gridcell "0026/2010" [ref=e175]
+                      - gridcell "Eastern Mining Co., Ltd" [ref=e176]
+                      - gridcell "production" [ref=e177]
+                      - 'gridcell "32.8 : 67.2" [ref=e178]'
+                      - gridcell "3.2.2010" [ref=e179]
+                      - gridcell "2.2.2017" [ref=e180]
+                      - gridcell "Tin/Tungsten Mixed" [ref=e181]
+                    - 'row "0027/2010 Eastern Mining Co., Ltd production 32.8 : 67.2 3.2.2010 2.2.2017 Tin/Tungsten Mixed" [ref=e182]':
+                      - gridcell "0027/2010" [ref=e183]
+                      - gridcell "Eastern Mining Co., Ltd" [ref=e184]
+                      - gridcell "production" [ref=e185]
+                      - 'gridcell "32.8 : 67.2" [ref=e186]'
+                      - gridcell "3.2.2010" [ref=e187]
+                      - gridcell "2.2.2017" [ref=e188]
+                      - gridcell "Tin/Tungsten Mixed" [ref=e189]
+                    - 'row "0028/2010 Eastern Mining Co., Ltd production 32.8 : 67.2 3.2.2010 2.2.2017 Tin/Tungsten Mixed" [ref=e190]':
+                      - gridcell "0028/2010" [ref=e191]
+                      - gridcell "Eastern Mining Co., Ltd" [ref=e192]
+                      - gridcell "production" [ref=e193]
+                      - 'gridcell "32.8 : 67.2" [ref=e194]'
+                      - gridcell "3.2.2010" [ref=e195]
+                      - gridcell "2.2.2017" [ref=e196]
+                      - gridcell "Tin/Tungsten Mixed" [ref=e197]
+                    - 'row "0374/2011 Htin Kyaw Win Co.,Ltd production 32.8 : 67.2 25.10.2011 24.10.2016 Tin/Tungsten Mixed" [ref=e198]':
+                      - gridcell "0374/2011" [ref=e199]
+                      - gridcell "Htin Kyaw Win Co.,Ltd" [ref=e200]
+                      - gridcell "production" [ref=e201]
+                      - 'gridcell "32.8 : 67.2" [ref=e202]'
+                      - gridcell "25.10.2011" [ref=e203]
+                      - gridcell "24.10.2016" [ref=e204]
+                      - gridcell "Tin/Tungsten Mixed" [ref=e205]
+                    - 'row "0190/2015 East Manufacturing Co.,Ltd production 30 : 70 7.11.2013 6.11.2016 Tin/Tungsten Mixed" [ref=e206]':
+                      - gridcell "0190/2015" [ref=e207]
+                      - gridcell "East Manufacturing Co.,Ltd" [ref=e208]
+                      - gridcell "production" [ref=e209]
+                      - 'gridcell "30 : 70" [ref=e210]'
+                      - gridcell "7.11.2013" [ref=e211]
+                      - gridcell "6.11.2016" [ref=e212]
+                      - gridcell "Tin/Tungsten Mixed" [ref=e213]
+                    - 'row "0195/2015 East Manufacturing Co.,Ltd production 30 : 70 14.10.2015 13.10.2020 Tin/Tungsten Mixed" [ref=e214]':
+                      - gridcell "0195/2015" [ref=e215]
+                      - gridcell "East Manufacturing Co.,Ltd" [ref=e216]
+                      - gridcell "production" [ref=e217]
+                      - 'gridcell "30 : 70" [ref=e218]'
+                      - gridcell "14.10.2015" [ref=e219]
+                      - gridcell "13.10.2020" [ref=e220]
+                      - gridcell "Tin/Tungsten Mixed" [ref=e221]
+                    - 'row "0187/2010 Grand Eden Mining Co., Ltd production 32.8 : 67.2 12.3.2010 11.3.2016 Tin/Tungsten Mixed" [ref=e222]':
+                      - gridcell "0187/2010" [ref=e223]
+                      - gridcell "Grand Eden Mining Co., Ltd" [ref=e224]
+                      - gridcell "production" [ref=e225]
+                      - 'gridcell "32.8 : 67.2" [ref=e226]'
+                      - gridcell "12.3.2010" [ref=e227]
+                      - gridcell "11.3.2016" [ref=e228]
+                      - gridcell "Tin/Tungsten Mixed" [ref=e229]
+                - text:    
+              - button "7.PSC ratio (15-16)" [ref=e231] [cursor=pointer]
+      - contentinfo [ref=e232]:
+        - generic [ref=e233]:
+          - generic [ref=e234]:
+            - link "EITI" [ref=e235] [cursor=pointer]:
+              - /url: https://eiti.org/
+              - img "EITI" [ref=e236]
+            - paragraph [ref=e237]:
+              - text: Developed by the
+              - link "Civic Literacy Initiative (CLi)" [ref=e238] [cursor=pointer]:
+                - /url: https://civicliteraci.es
+              - text: and powered by
+              - link "PortalJS" [ref=e239] [cursor=pointer]:
+                - /url: https://portaljs.com
+              - text: .
+          - generic [ref=e240]:
+            - navigation [ref=e241]:
+              - link "Search" [ref=e242] [cursor=pointer]:
+                - /url: /search
+              - link "Organizations" [ref=e243] [cursor=pointer]:
+                - /url: /organizations
+              - link "Groups" [ref=e244] [cursor=pointer]:
+                - /url: /groups
+            - generic [ref=e245]:
+              - link "Data license" [ref=e246] [cursor=pointer]:
+                - /url: https://eiti.org/open-data
+              - link "Data source" [ref=e247] [cursor=pointer]:
+                - /url: https://eiti.org/
+        - generic [ref=e249]: Extractive Industries Transparency Initiative · Open data portal
+  - alert [ref=e250]
+```

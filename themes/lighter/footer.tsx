@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const siteNav = [
   { name: "Search", href: "/search" },
   { name: "Organizations", href: "/organizations" },
@@ -10,7 +12,7 @@ const LighterThemeFooter: React.FC = () => {
       <div className="custom-container mx-auto py-12 flex flex-col gap-10 md:flex-row md:justify-between">
         <div className="max-w-md space-y-4">
           <a href="https://eiti.org/" target="_blank" rel="noopener noreferrer">
-            <img
+            <Image
               src="/images/logos/eiti-logo-negative.png"
               alt="EITI"
               width={109}

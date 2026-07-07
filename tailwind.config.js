@@ -38,7 +38,10 @@ module.exports = {
           navy: "#132856",
           navy2: "#15517F",
           amber: "#F6A70A",
-          amberink: "#B57905",
+          // Amber-toned text on light surfaces. The design system's #B57905
+          // fails WCAG AA at small sizes (3.68:1 on white); #8F5F04 passes
+          // with margin on both white and the page background.
+          amberink: "#8F5F04",
           green: "#16795E",
           ink: "#111A35",
           muted: "#55607A",

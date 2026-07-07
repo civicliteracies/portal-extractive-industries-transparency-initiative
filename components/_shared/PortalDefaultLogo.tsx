@@ -1,10 +1,11 @@
+import Image from "next/image";
 import Link from "next/link";
 
 // White (negative) EITI logo — legible on the navy header and footer only.
 export default function PortalDefaultLogo() {
   return (
     <Link href="/">
-      <img
+      <Image
         src="/images/logos/eiti-logo-negative.png"
         alt="EITI"
         width={109}
