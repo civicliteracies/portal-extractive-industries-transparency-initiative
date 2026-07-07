@@ -39,9 +39,10 @@ const SearchForm: React.FC<{ datasetCount?: number }> = ({ datasetCount }) => {
       {/* Amber surfaces carry navy text: white on amber fails WCAG AA. */}
       <button
         type="submit"
+        aria-label="Search"
         className="rounded-md bg-eiti-amber text-eiti-navy text-[13px] font-bold uppercase tracking-label px-4 py-4 md:px-8 leading-none transition-colors hover:bg-[#E09804]"
       >
-        <MagnifyingGlassIcon width={20} className="sm:hidden" />
+        <MagnifyingGlassIcon width={20} className="sm:hidden" aria-hidden="true" />
         <span className="hidden sm:block">Search</span>
       </button>
     </form>
