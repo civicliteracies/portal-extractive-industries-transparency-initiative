@@ -1,54 +1,27 @@
-export function getDaysAgo(date: string) {
-  const today = new Date();
-  const createdOn = new Date(date);
-  const msInDay = 24 * 60 * 60 * 1000;
+import { format } from "timeago.js";
+import clsx, {type ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
-  createdOn.setHours(0, 0, 0, 0);
-  today.setHours(0, 0, 0, 0);
-
-  return (+today - +createdOn) / msInDay;
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
 }
 
-export default async function fetchRetry(url: string, n: number): Promise<any> {
-  const abortController = new AbortController();
-  const id = setTimeout(() => abortController.abort(), 5000);
-  const res = await fetch(url, { signal: abortController.signal });
-  clearTimeout(id);
-  if (!res.ok && n && n > 0) {
-    return await fetchRetry(url, n - 1);
+export function getTimeAgo(timestamp: string) {
+  const trimmed = timestamp.trim();
+  const hasTZ = /Z$|[+-]\d{2}:\d{2}$/.test(trimmed);
+  const normalised = hasTZ ? trimmed : `${trimmed}Z`;
+
+  const date = new Date(normalised);
+  if (isNaN(date.getTime())) {
+    return timestamp;
   }
-  return res;
+
+  return format(date);
 }
 
-export function removeTag(tag?: string) {
-  if (tag === "{{description}}" || !tag) {
-    return undefined;
+export function capitalizeFirstLetter(str: string) {
+  if (str.length === 0) {
+    return str;
   }
-  if (typeof window !== "undefined") {
-    const div = document.createElement("div");
-    div.innerHTML = tag;
-    return div.textContent || div.innerText || "";
-  }
-  return tag;
-}
-
-//The porpuse of this functoin is converting the schema returned from datastore info which is in the form o a dictionary into an array of key value pairs that can be consumed by the data-explorer
-export function convertFieldSchema(
-  schema: Record<string, string | boolean | number>
-) {
-  function convertToGraphqlString(fieldName: string) {
-    return fieldName
-      .replaceAll(" ", "_")
-      .replaceAll("(", "_")
-      .replaceAll(")", "_")
-      .replace(/[^\w\s]|(_)\1/gi, "_");
-  }
-  const entries = Object.entries(schema);
-  return {
-    fields: entries.map((entry) => ({
-      name: convertToGraphqlString(entry[0]),
-      title: entry[0],
-      type: entry[1],
-    })),
-  };
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }

@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -9,6 +10,7 @@
   --accent: hsl(182, 100%, 38%);
   --indicator-size: 3px;
   --text-active-color: black;
+  --queryless-drawer-width: 560px;
 }
 
 a {
@@ -30,7 +32,7 @@ body {
 }
 
 .custom-container {
-  width: min(1200px, 95%);
+  width: min(1200px, 90%);
   margin: 0 auto;
 }
 
@@ -77,4 +79,61 @@ snap-tabs {
 
 .css-7eceai-Grid-1 {
   display: none !important;
+}
+
+.custom-popper {
+  @apply z-50; /* Ensures dropdown appears above other elements */
+}
+.react-datepicker {
+  @apply bg-white rounded-md shadow-lg border border-gray-200 p-2;
+}
+
+.react-datepicker__header {
+  @apply bg-blue-500 text-white rounded-t-md py-2;
+}
+
+.react-datepicker__current-month {
+  @apply font-bold text-lg;
+}
+
+.react-datepicker__day,
+.react-datepicker__day-name {
+  @apply text-sm hover:bg-blue-100 hover:text-blue-500 rounded-full w-10 h-10 flex items-center justify-center;
+}
+
+.react-datepicker__day--selected {
+  @apply bg-blue-500 text-white;
+}
+
+.react-datepicker__day--today {
+  @apply font-bold underline text-blue-500;
+}
+
+.react-datepicker__month{
+  @apply mx-auto flex items-center justify-center rounded-full;
+}
+
+.react-datepicker__month,
+.react-datepicker__month-text{
+  margin:0!important;
+}
+
+#app-shell {
+  transition: margin-right 180ms ease;
+}
+
+@media (min-width: 1024px) {
+  body.queryless-drawer-open #app-shell {
+    margin-right: var(--queryless-drawer-width);
+  }
+}
+
+.vega-embed,
+.vega-embed > div {
+  max-width: 100%;
+}
+
+.vega-embed svg {
+  display: block;
+  max-width: 100%;
 }

@@ -1,106 +1,76 @@
-import { GetStaticProps, InferGetStaticPropsType } from "next";
-import Head from "next/head";
-import getConfig from "next/config";
+import { GetServerSideProps } from "next";
 import DatasetInfo from "@/components/dataset/individualPage/DatasetInfo";
 import DatasetOverview from "@/components/dataset/individualPage/DatasetOverview";
 import DatasetNavCrumbs from "@/components/dataset/individualPage/NavCrumbs";
 import ResourcesList from "@/components/dataset/individualPage/ResourcesList";
-import PaginatedActivityStream from "@/components/_shared/PaginatedActivityStream";
+import ActivityStream from "@/components/_shared/ActivityStream";
 import Layout from "@/components/_shared/Layout";
 import Tabs from "@/components/_shared/Tabs";
-import TopBar from "@/components/_shared/TopBar";
-import { Dataset as DatasetType } from "@portaljs/ckan";
 import { CKAN } from "@portaljs/ckan";
 import styles from "styles/DatasetInfo.module.scss";
-import {
-  getAvailableOrgs,
-  privateToPublicDatasetName,
-  privateToPublicOrgName,
-  publicToPrivateDatasetName,
-} from "@/lib/queries/utils";
-import { getActivityStreamPage } from "@/lib/queries/activity";
 import { getDataset } from "@/lib/queries/dataset";
-import { trimDatasetDetailData } from "@/lib/queries/pageData";
+import HeroSection from "@/components/_shared/HeroSection";
+import { DatasetPageStructuredData } from "@/components/schema/DatasetPageStructuredData";
 
-const ACTIVITY_PAGE_SIZE = 20;
-
-export async function getStaticPaths() {
+export const getServerSideProps: GetServerSideProps = async (context) => {
   const ckan = new CKAN(process.env.NEXT_PUBLIC_DMS);
-  const mainOrg = process.env.NEXT_PUBLIC_ORG;
-  const availableOrgs = await getAvailableOrgs(mainOrg);
-  const paths = (
-    await ckan.getDatasetsListWithDetails({ offset: 0, limit: 1000 })
-  )
-    //Only create routes for datasets whose owner_orgs is in the availableOrgs list
-    .filter((dataset) => availableOrgs.includes(dataset.organization?.name))
-    .map((dataset: DatasetType) => ({
-      params: {
-        dataset: privateToPublicDatasetName(dataset.name, mainOrg),
-        org: privateToPublicOrgName(dataset.organization?.name, mainOrg),
-      },
-    }));
-  return {
-    paths,
-    fallback: "blocking",
-  };
-}
+  const datasetName = context.params?.dataset as string;
+  const orgName = context.params?.org as string;
 
-export const getStaticProps: GetStaticProps = async (context) => {
+  if (!datasetName || !orgName.startsWith("@")) {
+    return {
+      notFound: true,
+    };
+  }
+
   try {
-    const ckan = new CKAN(process.env.NEXT_PUBLIC_DMS);
-    const mainOrg = process.env.NEXT_PUBLIC_ORG;
-    const datasetName = context.params?.dataset as string;
-    const privateDatasetName = publicToPrivateDatasetName(datasetName, mainOrg);
-    if (!datasetName) {
-      return {
-        notFound: true,
-      };
-    }
     let dataset = await getDataset({ name: datasetName as string });
     if (!dataset) {
       return {
         notFound: true,
       };
     }
-    const activityStream = await getActivityStreamPage({
-      entityId: privateDatasetName,
-      entityType: "dataset",
-      limit: ACTIVITY_PAGE_SIZE,
-      offset: 0,
-    });
+    const activityStream = await ckan.getDatasetActivityStream(datasetName);
     dataset = {
-      ...trimDatasetDetailData(dataset),
-      activity_stream: activityStream.activities,
-      activity_stream_has_more: activityStream.hasMore,
+      ...dataset,
+      activity_stream: activityStream,
     };
+
+    if (!dataset.organization || "@" + dataset.organization.name !== orgName) {
+      return {
+        notFound: true,
+      };
+    }
     return {
       props: {
         dataset,
       },
-      revalidate: 1800,
     };
-  } catch {
+  } catch (e) {
+    console.error(e);
     return {
       notFound: true,
     };
   }
 };
 
-export default function DatasetPage({
-  dataset,
-}: InferGetStaticPropsType<typeof getStaticProps>): JSX.Element {
+export default function DatasetPage({ dataset }): JSX.Element {
   const tabs = [
-    {
-      id: "resources",
-      content: (
-        <ResourcesList
-          resources={dataset?.resources}
-          orgName={dataset.organization ? dataset.organization.name : ""}
-          datasetName={dataset.name}
-        />
-      ),
-      title: "Resources",
-    },
+    ...(dataset.type != "visualization"
+      ? [
+          {
+            id: "resources",
+            content: (
+              <ResourcesList
+                resources={dataset?.resources}
+                orgName={dataset.organization ? dataset.organization.name : ""}
+                datasetName={dataset.name}
+              />
+            ),
+            title: "Resources",
+          },
+        ]
+      : []),
     {
       id: "information",
       content: <DatasetOverview dataset={dataset} />,
@@ -109,12 +79,8 @@ export default function DatasetPage({
     {
       id: "activity-stream",
       content: (
-        <PaginatedActivityStream
-          entityId={dataset._name}
-          entityType="dataset"
-          initialActivities={dataset?.activity_stream ? dataset.activity_stream : []}
-          initialHasMore={dataset?.activity_stream_has_more || false}
-          limit={ACTIVITY_PAGE_SIZE}
+        <ActivityStream
+          activities={dataset?.activity_stream ? dataset.activity_stream : []}
         />
       ),
       title: "Activity Stream",
@@ -122,43 +88,26 @@ export default function DatasetPage({
   ];
   return (
     <>
-      <Head>
-        <title>{`${dataset.title || dataset.name} - Dataset`}</title>
-        <meta name="description" content="Generated by create next app" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <DatasetPageStructuredData dataset={dataset} />
       <Layout>
-        <div className="grid grid-rows-datasetpage-hero">
-          <section className="row-start-1 row-end-3 col-span-full">
-            <div
-              className="bg-cover h-full bg-center bg-no-repeat bg-black flex flex-col"
-              style={{
-                backgroundImage: "url('/images/backgrounds/SearchHero.avif')",
-              }}
-            >
-              <TopBar />
-              <DatasetNavCrumbs
-                org={{
-                  name: dataset.organization?.name,
-                  title: dataset.organization?.title,
-                }}
-                dataset={{
-                  name: dataset.name,
-                  title: dataset.title ? dataset.title : "This dataset",
-                }}
-              />
-              <div
-                className="grid mx-auto items-center grow custom-container grow"
-                style={{ marginBlock: "8rem" }}
-              >
-                <div className="col-span-1">
-                  <h1 className="text-6xl font-black text-white">
-                    {dataset.title}
-                  </h1>
-                </div>
-              </div>
-            </div>
-          </section>
+        <HeroSection title={dataset.title} cols="6" />
+        <DatasetNavCrumbs
+          datasetType={dataset.type}
+          datasetsLinkHref={
+            dataset.type === "visualization"
+              ? "/search?type=visualization"
+              : "/search"
+          }
+          org={{
+            name: dataset.organization?.name,
+            title: dataset.organization?.title,
+          }}
+          dataset={{
+            name: dataset.name,
+            title: dataset.title ? dataset.title : "This dataset",
+          }}
+        />
+        <div className="grid grid-rows-datasetpage-hero mt-8">
           <section className="grid row-start-2 row-span-2 col-span-full">
             <div className="custom-container">
               {dataset && (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Tab } from "@headlessui/react";
 interface TabProps {
   items: Array<{ title: string; content: React.ReactNode; id: string }>;
@@ -12,7 +12,7 @@ export default function Tabs({ items }: TabProps) {
             <Tab key={item.id}>
               {({ selected }) => (
                 <span
-                  className={`font-semibold text-xs px-6 py-4 focus:outline-0 border-[#00bbc2] ${
+                  className={`font-semibold text-xs px-6 py-4 focus:outline-0 border-accent ${
                     selected ? "border-b-2" : ""
                   } `}
                 >
