@@ -17,8 +17,14 @@ export default function TableHeadCell({ col: key }) {
     updateFilter,
   } = useResourceData();
 
-  const min = Math.min(...data.map((row) => row[key]));
-  const max = Math.max(...data.map((row) => row[key]));
+  // Columns detected as numeric can still contain nulls or strings in later
+  // rows; Math.min over those yields NaN, which breaks the slider's ARIA
+  // attributes and silently resets its range to rc-slider's 0-100 default.
+  const numericValues = data
+    .map((row) => row[key])
+    .filter((v): v is number => typeof v === "number" && Number.isFinite(v));
+  const min = numericValues.length ? Math.min(...numericValues) : 0;
+  const max = numericValues.length ? Math.max(...numericValues) : 0;
 
   const [value, setValue] = useState<number[]>([min, max]);
 
@@ -65,13 +71,18 @@ export default function TableHeadCell({ col: key }) {
                 <Slider
                   range
                   value={value}
-                  min={Math.min(...data.map((row) => row[key]))}
-                  max={Math.max(...data.map((row) => row[key]))}
+                  min={min}
+                  max={max}
                   onChange={(v: number[]) => {
                     setValue(v);
                     updateFilter(key, v);
                   }}
-                  aria-label={`Range filter for ${key}`}
+                  // A range slider renders two handles; a plain aria-label on
+                  // the wrapper names neither, which axe flags as serious.
+                  ariaLabelForHandle={[
+                    `Minimum ${key} filter`,
+                    `Maximum ${key} filter`,
+                  ]}
                 />
               </div>
             </div>
