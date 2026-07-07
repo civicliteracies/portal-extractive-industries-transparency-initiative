@@ -24,10 +24,10 @@ export default function TableHeadCell({ col: key }) {
 
   return (
     <th
-      className={`py-2 min-w-[140px] border-0 text-left bg-accent-50 whitespace-nowrap group  ${
+      className={`py-2 min-w-[140px] border-0 text-left bg-accent whitespace-nowrap group  ${
         !visibleColumns.includes(key) ? "hidden" : ""
       } ${
-        pinnedColumns.includes(key) ? "sticky left-0 z-10 bg-accent-50 " : ""
+        pinnedColumns.includes(key) ? "sticky left-0 z-10 bg-accent " : ""
       }`}
       role="columnheader"
       scope="col"
@@ -43,9 +43,9 @@ export default function TableHeadCell({ col: key }) {
               )
             }
             title={key}
-            className="text-sm text-left truncate font-normal text-gray-600"
+            className="text-sm text-left truncate font-normal text-white"
           >
-            <span className="uppercase font-[600]">{key}</span>{" "}
+            <span className="uppercase font-[700] text-xs tracking-[0.04em]">{key}</span>{" "}
             {sortConfig?.key === key
               ? sortConfig.direction === "asc"
                 ? "↑"
@@ -56,7 +56,7 @@ export default function TableHeadCell({ col: key }) {
         <PinButton col={key} />
       </div>
 
-      <div className="border-t border-accent-100 px-3 pt-2">
+      <div className="border-t border-white/20 px-3 pt-2">
         {/* Filters */}
         {typeof data[0]?.[key] === "number" ? (
           <div className=" h-[34px] flex items-center w-full group">
@@ -100,7 +100,7 @@ export default function TableHeadCell({ col: key }) {
       </div>
 
       {pinnedColumns.includes(key) && (
-        <span className="absolute right-[0px] h-full w-[1px] bg-gray-100 top-0"></span>
+        <span className="absolute right-[0px] h-full w-[1px] bg-white/20 top-0"></span>
       )}
     </th>
   );

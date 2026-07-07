@@ -84,7 +84,7 @@ snap-tabs {
 }
 
 .react-datepicker__header {
-  @apply bg-blue-500 text-white rounded-t-md py-2;
+  @apply bg-accent text-white rounded-t-md py-2;
 }
 
 .react-datepicker__current-month {
@@ -93,15 +93,15 @@ snap-tabs {
 
 .react-datepicker__day,
 .react-datepicker__day-name {
-  @apply text-sm hover:bg-blue-100 hover:text-blue-500 rounded-full w-10 h-10 flex items-center justify-center;
+  @apply text-sm hover:bg-accent-100 hover:text-accent rounded-full w-10 h-10 flex items-center justify-center;
 }
 
 .react-datepicker__day--selected {
-  @apply bg-blue-500 text-white;
+  @apply bg-accent text-white;
 }
 
 .react-datepicker__day--today {
-  @apply font-bold underline text-blue-500;
+  @apply font-bold underline text-accent;
 }
 
 .react-datepicker__month{

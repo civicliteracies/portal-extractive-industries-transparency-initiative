@@ -15,15 +15,15 @@ export default function TableData() {
     }
   }, [data]);
   return (
-    <div ref={scrollRef} className="overflow-auto max-h-[750px] relative border-y min-h-[500px] w-full">
+    <div ref={scrollRef} className="overflow-auto max-h-[750px] relative rounded-lg border border-eiti-border min-h-[500px] w-full">
       {/* Table */}
       <table
-        className="min-w-full table-auto border-collapse border-0 static"
+        className="min-w-full table-auto border-collapse border-0 static text-sm tabular-nums"
         role="table"
       >
         {/* Table Head */}
         <TableHead className="sticky top-0 z-[15] border-b  shadow-sm" />
-        <tbody className="divide-y divide-accent-100">
+        <tbody className="divide-y divide-eiti-bordersubtle bg-white">
           {paginatedData.map((row, rowIndex) => (
             <tr key={rowIndex} role="row">
               {columns.map((key, z) => (
