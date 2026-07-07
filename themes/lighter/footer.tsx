@@ -111,13 +111,13 @@ const LighterThemeFooter: React.FC = () => {
       >
         <div className="justify-between w-full text-center md:text-left lg:flex">
           <div className="w-full lg:w-1/3 md:w-1/2">
-            <h2 className="mt-4 mb-4 font-roboto font-black">ABOUT DATOPIAN</h2>
+            <h2 className="mt-4 mb-4 font-black">ABOUT DATOPIAN</h2>
             <ul className="space-y-4 text-sm list-none">
               {navigation.about.map((item) => (
                 <li key={item.name}>
                   <a
                     href={item.href}
-                    className="font-roboto font-normal hover:text-accent transition-all"
+                    className="font-normal hover:text-accent transition-all"
                   >
                     {item.name}
                   </a>
@@ -127,13 +127,13 @@ const LighterThemeFooter: React.FC = () => {
           </div>
 
           <div className="w-full lg:w-1/3 md:w-1/2">
-            <h2 className="mt-4 mb-4 font-roboto font-black">USEFUL LINKS</h2>
+            <h2 className="mt-4 mb-4 font-black">USEFUL LINKS</h2>
             <ul className="space-y-4 text-sm list-none">
               {navigation.useful.map((item) => (
                 <li key={item.name}>
                   <a
                     href={item.href}
-                    className="font-roboto font-normal hover:text-accent transition-all"
+                    className="font-normal hover:text-accent transition-all"
                   >
                     {item.name}
                   </a>
@@ -143,13 +143,13 @@ const LighterThemeFooter: React.FC = () => {
           </div>
 
           <div className="w-full lg:w-1/3 md:w-1/2">
-            <h2 className="mt-4 mb-4 font-roboto font-black">GET STARTED</h2>
+            <h2 className="mt-4 mb-4 font-black">GET STARTED</h2>
             <ul className="space-y-4 text-sm list-none">
               {navigation.getStarted.map((item) => (
                 <li key={item.name}>
                   <a
                     href={item.href}
-                    className="font-roboto font-normal hover:text-accent transition-all"
+                    className="font-normal hover:text-accent transition-all"
                   >
                     {item.name}
                   </a>
@@ -159,7 +159,7 @@ const LighterThemeFooter: React.FC = () => {
           </div>
         </div>
         <div className="w-full md:w-1/2 flex flex-col justify-between text-center md:text-left">
-          <h2 className="mt-4 mb-4 font-roboto font-black">
+          <h2 className="mt-4 mb-4 font-black">
             STAY UP TO DATE WITH THE NEWS
           </h2>
           <div className="flex mt-5 space-x-5 justify-center md:justify-start">
@@ -188,7 +188,7 @@ const LighterThemeFooter: React.FC = () => {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <span className="text-sm">Built with</span><span className="font-extrabold text-[#1f2937] text-xl sm:text-lg font-roboto ">🌀 PortalJS</span>
+            <span className="text-sm">Built with</span><span className="font-extrabold text-[#1f2937] text-xl sm:text-lg ">🌀 PortalJS</span>
           </a>
         </div>
       </div>

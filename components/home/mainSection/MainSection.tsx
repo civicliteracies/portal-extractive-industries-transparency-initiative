@@ -57,7 +57,7 @@ export default function MainSection({
           {groups.length > 4 && (
             <Link
               href="/groups"
-              className={`font-montserrat font-semibold flex items-center gap-1 uppercase hover:text-darkaccent ml-auto w-fit absolute right-0 top-[-30px]`}
+              className={`font-semibold flex items-center gap-1 uppercase hover:text-darkaccent ml-auto w-fit absolute right-0 top-[-30px]`}
             >
               View all categories
               <ArrowLongRightIcon width={16} />

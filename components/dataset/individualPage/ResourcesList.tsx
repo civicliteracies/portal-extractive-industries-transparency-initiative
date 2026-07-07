@@ -40,7 +40,7 @@ export default function ResourcesList({
               resource?.iframe) && (
               <Link
                 href={`/@${orgName}/${datasetName}/r/${resource.id}`}
-                className="px-2 py-1 border  h-fit shadow hover:shadow-lg transition-all text-sm  text-center text-dark rounded font-roboto font-bold border-accent-50 hover:border-accent-100 hover:bg-accent-100  duration-150 flex items-center justify-center gap-1"
+                className="px-2 py-1 border  h-fit shadow hover:shadow-lg transition-all text-sm  text-center text-dark rounded font-bold border-accent-50 hover:border-accent-100 hover:bg-accent-100  duration-150 flex items-center justify-center gap-1"
               >
                 <RiEyeLine />
                 <span>Preview</span>
@@ -49,7 +49,7 @@ export default function ResourcesList({
             {resource.url && (
               <Link
                 href={resource.url}
-                className="bg-accent px-2 py-1 h-fit shadow hover:shadow-lg transition-all text-sm  text-center text-white rounded font-roboto font-bold hover:bg-darkaccent hover:text-white duration-150 flex items-center justify-center gap-1"
+                className="bg-accent px-2 py-1 h-fit shadow hover:shadow-lg transition-all text-sm  text-center text-white rounded font-bold hover:bg-darkaccent hover:text-white duration-150 flex items-center justify-center gap-1"
               >
                 <RiDownload2Fill />
                 <span>Download</span>

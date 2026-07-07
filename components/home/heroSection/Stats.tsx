@@ -14,7 +14,7 @@ export function Stat({
   return (
     <Link
       href={href}
-      className="font-poppins flex items-center gap-[20px] hover:text-accent transition-all"
+      className="flex items-center gap-[20px] hover:text-accent transition-all"
     >
       <span className="text-accent">
         <Icon className="text-[40px]" width={40} />

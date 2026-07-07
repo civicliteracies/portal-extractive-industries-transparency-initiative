@@ -36,15 +36,15 @@ export default function GroupCard({
         height="54"
       ></Image>
       <div className={`text-black`}>
-        <h3 className="font-inter font-semibold text-lg mt-4 group-hover:text-accent">
+        <h3 className="font-semibold text-lg mt-4 group-hover:text-accent">
           {display_name}
         </h3>
-        <p className="font-inter font-medium text-sm mt-1 mb-6 line-clamp-2">
+        <p className="font-medium text-sm mt-1 mb-6 line-clamp-2">
           {description}
         </p>
       </div>
       <span
-        className={` font-inter font-medium text-sm flex items-center gap-2`}
+        className={` font-medium text-sm flex items-center gap-2`}
       >
         View collection
         <ArrowRightIcon width={16} />
