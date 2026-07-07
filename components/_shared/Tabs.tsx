@@ -7,14 +7,16 @@ export default function Tabs({ items }: TabProps) {
   return (
     <>
       <Tab.Group>
-        <Tab.List>
+        <Tab.List className="flex gap-1 border-b border-eiti-border">
           {items.map((item, index) => (
-            <Tab key={item.id}>
+            <Tab key={item.id} className="focus:outline-0">
               {({ selected }) => (
                 <span
-                  className={`font-semibold text-xs px-6 py-4 focus:outline-0 border-accent ${
-                    selected ? "border-b-2" : ""
-                  } `}
+                  className={`inline-block px-4 py-3 text-xs font-bold uppercase tracking-label border-b-2 -mb-px transition-colors ${
+                    selected
+                      ? "border-eiti-amber text-accent"
+                      : "border-transparent text-eiti-muted hover:text-accent"
+                  }`}
                 >
                   {item.title}
                 </span>
