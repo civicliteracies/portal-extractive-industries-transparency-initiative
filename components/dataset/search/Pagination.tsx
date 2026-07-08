@@ -6,10 +6,15 @@ export default function Pagination({ count }: { count: number }) {
   if (!count) return null;
 
   const pageSize = options.limit || 10;
-  const currentPage = Math.floor(options.offset / pageSize);
   const pageCount = Math.ceil(count / pageSize);
-  const from = options.offset + 1;
-  const to = Math.min(options.offset + pageSize, count);
+  // options.offset can be stale relative to a shrunken result set; clamp so
+  // the pager never displays a page beyond the last one.
+  const currentPage = Math.min(
+    Math.floor(options.offset / pageSize),
+    pageCount - 1
+  );
+  const from = currentPage * pageSize + 1;
+  const to = Math.min((currentPage + 1) * pageSize, count);
 
   const goToPage = (page: number) => {
     setOptions({ ...options, offset: page * pageSize });

@@ -8,6 +8,7 @@ export default function DatasetSearchForm() {
     e.preventDefault();
     setOptions({
       query: q,
+      offset: 0,
     });
   };
 

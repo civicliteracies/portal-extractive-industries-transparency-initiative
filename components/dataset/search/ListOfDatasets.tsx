@@ -37,7 +37,7 @@ function ListItems() {
               value={options.sort ?? "score desc"}
               onChange={(e) => {
                 const value = e.target.value;
-                setOptions({ sort: value });
+                setOptions({ sort: value, offset: 0 });
               }}
             >
               <option value="score desc">Most relevant</option>
