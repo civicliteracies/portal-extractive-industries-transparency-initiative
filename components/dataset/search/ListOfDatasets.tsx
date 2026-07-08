@@ -1,6 +1,4 @@
-import { useState } from "react";
 import Pagination from "./Pagination";
-import Image from "next/image";
 import { useRouter } from "next/router";
 
 import { useSearchState } from "./SearchContext";
@@ -17,8 +15,6 @@ export default function ListOfDatasets() {
 
 function ListItems() {
   const { options, setOptions, searchResults, isLoading } = useSearchState();
-
-  const [subsetOfPages, setSubsetOfPages] = useState(0);
 
   return (
     <>
@@ -64,8 +60,6 @@ function ListItems() {
         <PackagePagination
           isLoading={isLoading}
           count={searchResults?.count}
-          subsetOfPages={subsetOfPages}
-          setSubsetOfPages={setSubsetOfPages}
         />
       </div>
     </>
@@ -197,28 +191,14 @@ function FilterBadges() {
   );
 }
 
-function PackagePagination({
-  isLoading,
-  count,
-  subsetOfPages,
-  setSubsetOfPages,
-}) {
+function PackagePagination({ isLoading, count }) {
   if (isLoading) return null;
 
   if (count > 0) {
-    return (
-      <Pagination
-        subsetOfPages={subsetOfPages}
-        setSubsetOfPages={setSubsetOfPages}
-        count={count}
-      />
-    );
-
-    return <ResultsNotFound />;
+    return <Pagination count={count} />;
   }
 
-  // make a pagination component once insights are added
-  return null;
+  return <ResultsNotFound />;
 }
 
 function ResultsNotFound() {
@@ -228,31 +208,23 @@ function ResultsNotFound() {
     router.push("/search", undefined, { shallow: true });
   };
   return (
-    <div className="mt-5 flex flex-col items-center rounded-lg border border-eiti-border bg-white gap-4 px-8 py-10 md:px-20">
-      <Image
-        src={"/images/search/noDatasets.svg"}
-        height={269}
-        width={358}
-        alt="no datasets found"
-      />
+    <div className="mt-5 flex flex-col items-center rounded-lg border border-eiti-border bg-white gap-4 px-8 py-14 md:px-20">
       <div className="flex flex-col items-center gap-2">
         <span className="text-accent font-extrabold text-[18px] leading-[23px]">
-          No datasets found.
+          No datasets found
         </span>
-        <span className="text-eiti-muted text-center font-normal text-[15px] leading-[20px]">
-          It looks like no datasets match your current search criteria. Try
-          reducing the number of filters or broadening your search terms and
-          give it another go.
+        <span className="text-eiti-muted text-center font-normal text-[15px] leading-[20px] max-w-[52ch]">
+          No datasets match your current search. Try removing filters or
+          broadening your search terms.
         </span>
       </div>
-      <div
+      <button
         onClick={clearFilters}
-        className="cursor-pointer rounded-md bg-accent hover:bg-eiti-navy2 transition-colors px-6 h-[44px] flex items-center justify-center"
+        type="button"
+        className="rounded-md bg-accent hover:bg-eiti-navy2 transition-colors px-6 h-[44px] flex items-center justify-center text-white text-[13px] font-bold uppercase tracking-label"
       >
-        <span className="text-white text-[13px] font-bold uppercase tracking-label leading-normal">
-          Clear filters
-        </span>
-      </div>
+        Clear filters
+      </button>
     </div>
   );
 }

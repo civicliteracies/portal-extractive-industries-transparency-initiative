@@ -1,15 +1,14 @@
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { useSearchState } from "./SearchContext";
 
 export default function DatasetSearchForm() {
   const { setOptions, options } = useSearchState();
   const [q, setQ] = useState(options.query ?? "");
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setOptions({
       query: q,
     });
-    return false;
   };
 
   return (

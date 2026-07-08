@@ -17,13 +17,13 @@ export default function FacetCard({
             {title}
           </h2>
           {showClear && (
-            <span
-              role="button"
-              className="cursor-pointer text-xs font-semibold text-eiti-muted hover:text-accent"
+            <button
+              type="button"
+              className="text-xs font-semibold text-eiti-muted hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eiti-amber"
               onClick={() => clearAction && clearAction()}
             >
               Clear
-            </span>
+            </button>
           )}
         </div>
       )}

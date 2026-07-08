@@ -1,8 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
-
 interface PaginationProps {
-  subsetOfPages: number;
-  setSubsetOfPages: Dispatch<SetStateAction<number>>;
   count: number;
   offset?: number;
   onPageChange?: (newOffset: number) => void;
@@ -13,6 +9,8 @@ export default function Pagination({
   offset,
   onPageChange,
 }: PaginationProps) {
+  if (!count) return null;
+
   const pageSize = 10;
   const currentPage = offset !== undefined ? Math.floor(offset / pageSize) : 0;
   const pageCount = Math.ceil(count / pageSize);

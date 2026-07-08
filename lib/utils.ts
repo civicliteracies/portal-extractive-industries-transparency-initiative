@@ -25,3 +25,14 @@ export function capitalizeFirstLetter(str: string) {
   }
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
+
+// CKAN image URLs are user-provided and can be relative or malformed, which
+// makes `new URL()` throw. Returns undefined instead so callers can fall back.
+export function parseUrl(value?: string): URL | undefined {
+  if (!value) return undefined;
+  try {
+    return new URL(value);
+  } catch {
+    return undefined;
+  }
+}

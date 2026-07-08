@@ -17,10 +17,12 @@ export default function ResourcesBadges({
   return (
     <div className="flex gap-1 flex-wrap">
       {visibleResources.map((res, index) => {
+        // Unknown or missing formats fall back to the muted archive tone so
+        // Color() never receives undefined.
         const color =
           resourceFormatColors[
-            res.format?.toUpperCase() as keyof typeof resourceBgColors
-          ];
+            res.format?.toUpperCase() as keyof typeof resourceFormatColors
+          ] ?? "#55607A";
         return (
           <span
             key={index}

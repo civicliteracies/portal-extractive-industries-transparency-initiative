@@ -2,7 +2,7 @@ import Slider from "rc-slider";
 import { sortConfigProps, useResourceData } from "./DataProvider";
 import { isValidDate } from "./utils";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiPushpin2Line } from "react-icons/ri";
 import DateRange from "./DateRange";
 
@@ -27,6 +27,12 @@ export default function TableHeadCell({ col: key }) {
   const max = numericValues.length ? Math.max(...numericValues) : 0;
 
   const [value, setValue] = useState<number[]>([min, max]);
+
+  // A data refresh can change the column bounds; without this the slider
+  // keeps stale handle positions from the previous dataset.
+  useEffect(() => {
+    setValue([min, max]);
+  }, [min, max]);
 
   return (
     <th

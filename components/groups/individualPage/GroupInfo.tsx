@@ -2,7 +2,7 @@ import getConfig from "next/config";
 import Image from "next/image";
 import { Tag } from "@portaljs/ckan";
 import { Group } from "@portaljs/ckan";
-import { getTimeAgo } from "@/lib/utils";
+import { getTimeAgo, parseUrl } from "@/lib/utils";
 
 function groupInitials(displayName: string): string {
   return displayName
@@ -27,9 +27,7 @@ function MetaRow({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 export default function GroupInfo({ group }: { group: Group }) {
-  const url = group.image_display_url
-    ? new URL(group.image_display_url)
-    : undefined;
+  const url = parseUrl(group.image_display_url);
   const hasCustomImage =
     group.image_display_url &&
     url &&

@@ -29,9 +29,9 @@ export default function DatasetSearchFilters() {
 
   return (
     <div className="flex flex-col ">
-      <a
-        href="#"
-        className="mb-4 flex items-center justify-between gap-1 rounded-md border border-eiti-borderinput bg-white px-4 py-3 text-[13px] font-bold uppercase tracking-label text-accent lg:hidden"
+      <button
+        type="button"
+        className="mb-4 flex w-full items-center justify-between gap-1 rounded-md border border-eiti-borderinput bg-white px-4 py-3 text-[13px] font-bold uppercase tracking-label text-accent lg:hidden"
         onClick={() => setShowFilters(!showFilters)}
       >
         {showFilters ? "Hide" : "Show"} Filters
@@ -40,7 +40,7 @@ export default function DatasetSearchFilters() {
         ) : (
           <ChevronDownIcon width={14} />
         )}
-      </a>
+      </button>
       <div className={` ${showFilters ? "block" : "hidden"} lg:block`}>
         <FacetCard title="Type">
           <div className="text-eiti-ink space-y-[10px]">

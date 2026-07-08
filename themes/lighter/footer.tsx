@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const siteNav = [
   { name: "Search", href: "/search" },
@@ -47,13 +48,13 @@ const LighterThemeFooter: React.FC = () => {
         <div className="flex flex-col gap-8 sm:flex-row sm:gap-16">
           <nav className="flex flex-col gap-2">
             {siteNav.map((item) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 className="text-sm font-semibold text-white hover:text-eiti-amber transition-colors"
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
           </nav>
           <div className="flex flex-col gap-2">

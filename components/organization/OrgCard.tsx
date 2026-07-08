@@ -2,6 +2,7 @@ import { Organization } from "@portaljs/ckan";
 import getConfig from "next/config";
 import Image from "next/image";
 import Link from "next/link";
+import { parseUrl } from "@/lib/utils";
 
 type OrgCardProps = Pick<
   Organization,
@@ -22,7 +23,7 @@ export default function OrgCard({
   name,
   packageCount,
 }: OrgCardProps) {
-  const url = image_display_url ? new URL(image_display_url) : undefined;
+  const url = parseUrl(image_display_url);
   const hasCustomImage =
     image_display_url &&
     url &&

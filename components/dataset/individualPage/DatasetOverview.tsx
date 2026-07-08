@@ -30,7 +30,8 @@ export default function DatasetOverview({ dataset }: { dataset: Dataset }) {
       <div className="  pb-5">
         <h4 className="pb-1 text-xs font-bold uppercase tracking-label text-eiti-muted">DATASET DATE</h4>
         <p className="font-semibold text-eiti-ink">
-          {dataset.metadata_created
+          {dataset.metadata_created &&
+          !Number.isNaN(Date.parse(dataset.metadata_created))
             ? new Intl.DateTimeFormat("en-GB", {
                 year: "numeric",
                 month: "short",

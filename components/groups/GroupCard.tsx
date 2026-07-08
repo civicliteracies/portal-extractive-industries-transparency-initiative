@@ -2,6 +2,7 @@ import getConfig from "next/config";
 import Image from "next/image";
 import Link from "next/link";
 import { Group } from "@portaljs/ckan";
+import { parseUrl } from "@/lib/utils";
 
 type GroupCardProps = Pick<
   Group,
@@ -23,7 +24,7 @@ export default function GroupCard({
   description,
   name,
 }: GroupCardProps) {
-  const url = image_display_url ? new URL(image_display_url) : undefined;
+  const url = parseUrl(image_display_url);
   const hasCustomImage =
     image_display_url &&
     url &&

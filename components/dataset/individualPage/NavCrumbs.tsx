@@ -25,13 +25,17 @@ export default function DatasetNavCrumbs({
         >
           {capitalizeFirstLetter(datasetType)}s
         </Link>
-        <span className="opacity-40">&rsaquo;</span>
-        <Link
-          href={`/@${org.name}`}
-          className="hover:border-b hover:border-eiti-amber"
-        >
-          {org.title || org.name}
-        </Link>
+        {org.name && (
+          <>
+            <span className="opacity-40">&rsaquo;</span>
+            <Link
+              href={`/@${org.name}`}
+              className="hover:border-b hover:border-eiti-amber"
+            >
+              {org.title || org.name}
+            </Link>
+          </>
+        )}
         <span className="opacity-40">&rsaquo;</span>
         <span className="font-bold normal-case tracking-normal text-eiti-muted">
           {dataset.title || dataset.name}

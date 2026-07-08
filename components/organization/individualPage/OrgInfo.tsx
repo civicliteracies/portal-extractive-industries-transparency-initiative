@@ -2,7 +2,7 @@ import getConfig from "next/config";
 import Image from "next/image";
 import { Tag } from "ckan";
 import { Organization } from "ckan";
-import { getTimeAgo } from "@/lib/utils";
+import { getTimeAgo, parseUrl } from "@/lib/utils";
 
 function orgInitials(displayName: string): string {
   const words = displayName.replace(/^EITI\s+/i, "").split(/\s+/);
@@ -25,13 +25,11 @@ function MetaRow({ label, value }: { label: string; value: React.ReactNode }) {
 }
 
 export default function OrgInfo({ org }: { org: Organization }) {
-  const url = org.image_display_url
-    ? new URL(org.image_display_url)
-    : undefined;
+  const url = parseUrl(org.image_display_url);
   const hasCustomImage =
     org.image_display_url &&
     url &&
-    getConfig().publicRuntimeConfig.DOMAINS.includes(url.hostname);
+    (getConfig().publicRuntimeConfig.DOMAINS ?? []).includes(url.hostname);
 
   const description = org.description?.replace(/<\/?[^>]+(>|$)/g, "");
 

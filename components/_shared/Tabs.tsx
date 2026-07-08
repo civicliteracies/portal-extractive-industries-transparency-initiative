@@ -9,7 +9,10 @@ export default function Tabs({ items }: TabProps) {
       <Tab.Group>
         <Tab.List className="flex gap-1 border-b border-eiti-border">
           {items.map((item, index) => (
-            <Tab key={item.id} className="focus:outline-0">
+            <Tab
+              key={item.id}
+              className="focus:outline-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eiti-amber"
+            >
               {({ selected }) => (
                 <span
                   className={`inline-block px-4 py-3 text-xs font-bold uppercase tracking-label border-b-2 -mb-px transition-colors ${

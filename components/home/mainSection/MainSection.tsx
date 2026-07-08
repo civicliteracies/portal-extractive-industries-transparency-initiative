@@ -125,7 +125,10 @@ export default function MainSection({
             allLabel="All datasets"
           />
           <div className="grid gap-4 md:grid-cols-3">
-            {datasets.slice(0, 3).map((dataset) => (
+            {datasets
+              .filter((dataset) => dataset.organization?.name)
+              .slice(0, 3)
+              .map((dataset) => (
               <Link
                 key={dataset.id}
                 href={`/@${dataset.organization?.name}/${dataset.name}`}

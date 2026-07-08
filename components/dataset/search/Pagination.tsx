@@ -1,16 +1,9 @@
-import { Dispatch, SetStateAction } from "react";
 import { useSearchState } from "./SearchContext";
 
-export default function Pagination({
-  subsetOfPages,
-  setSubsetOfPages,
-  count,
-}: {
-  subsetOfPages: number;
-  setSubsetOfPages: Dispatch<SetStateAction<number>>;
-  count: number;
-}) {
+export default function Pagination({ count }: { count: number }) {
   const { options, setOptions } = useSearchState();
+
+  if (!count) return null;
 
   const pageSize = options.limit || 10;
   const currentPage = Math.floor(options.offset / pageSize);

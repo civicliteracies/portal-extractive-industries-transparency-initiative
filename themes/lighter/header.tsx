@@ -49,7 +49,9 @@ export default function LighterThemeHeader() {
               key={item.href}
               href={item.href}
               className={`text-[13px] font-bold uppercase tracking-label text-white py-2 border-b-2 transition-colors hover:border-eiti-amber ${
-                router.pathname === item.href
+                router.asPath === item.href ||
+                router.asPath.startsWith(`${item.href}/`) ||
+                router.asPath.startsWith(`${item.href}?`)
                   ? "border-eiti-amber"
                   : "border-transparent"
               }`}

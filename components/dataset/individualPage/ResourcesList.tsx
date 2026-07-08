@@ -39,7 +39,7 @@ export default function ResourcesList({
           </div>
           <div className="flex flex-none gap-2 pt-2 sm:pt-0">
             {(["csv", "pdf", "xlsx", "xls", "geojson"].includes(
-              resource.format.toLowerCase()
+              (resource.format ?? "").toLowerCase()
             ) ||
               resource?.iframe) && (
               <Link
