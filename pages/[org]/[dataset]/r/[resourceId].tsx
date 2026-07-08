@@ -5,7 +5,7 @@ import { CKAN } from "@portaljs/ckan";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { RiArrowLeftLine } from "react-icons/ri";
 import ResourcesBadges from "@/components/dataset/_shared/ResourcesBadges";
 import { PrimeReactProvider } from "primereact/api";
@@ -77,16 +77,22 @@ export default function ResourcePage({
   const resourceFormat = resource.format.toLowerCase();
   const router = useRouter();
   const { dataset } = router.query;
+  const isExcel = ["xlsx", "xls"].includes(resourceFormat);
+  const excelContainerRef = useRef<HTMLDivElement>(null);
 
   // The Excel viewer from @portaljs/components renders an AG Grid whose
   // scrollable body contains no focusable content, so keyboard users cannot
   // scroll it (axe: scrollable-region-focusable). Making the viewport itself
   // focusable would break the grid's ARIA child chain (aria-required-children),
   // so instead restore AG Grid's own convention: one focusable cell as the
-  // keyboard entry point. Remove once fixed upstream.
+  // keyboard entry point. Remove once fixed upstream. The observer is scoped to
+  // the viewer's own container so AG Grid's frequent scroll/virtualization
+  // mutations don't trigger document-wide callbacks.
   useEffect(() => {
+    const container = excelContainerRef.current;
+    if (!container) return;
     const makeFocusable = () => {
-      document.querySelectorAll(".ag-body-viewport").forEach((viewport) => {
+      container.querySelectorAll(".ag-body-viewport").forEach((viewport) => {
         if (!viewport.querySelector('[tabindex="0"]')) {
           const firstCell = viewport.querySelector(".ag-cell");
           firstCell?.setAttribute("tabindex", "0");
@@ -95,9 +101,9 @@ export default function ResourcePage({
     };
     makeFocusable();
     const observer = new MutationObserver(makeFocusable);
-    observer.observe(document.body, { childList: true, subtree: true });
+    observer.observe(container, { childList: true, subtree: true });
     return () => observer.disconnect();
-  }, []);
+  }, [isExcel]);
 
   return (
     <PrimeReactProvider>
@@ -216,8 +222,10 @@ export default function ResourcePage({
                     parentClassName="h-[900px]"
                   />
                 )}
-                {["xlsx", "xls"].includes(resourceFormat) && (
-                  <ExcelViewer url={resource.url} />
+                {isExcel && (
+                  <div ref={excelContainerRef}>
+                    <ExcelViewer url={resource.url} />
+                  </div>
                 )}
                 {resourceFormat?.toLocaleLowerCase() == "geojson" && (
                   <MapViewer
