@@ -45,7 +45,7 @@ const howItWorks = [
     n: "01",
     title: "Search the catalogue",
     description:
-      "Reports and data files from every member country — filter by country, group or file format.",
+      "Reports and data files from every member country — filter by country, category or file format.",
   },
   {
     n: "02",
@@ -72,15 +72,15 @@ export default function MainSection({
     <section className="custom-container homepage-padding mx-auto">
       <section className="pt-16">
         <SectionHead
-          title="Browse by group"
-          allHref="/groups"
-          allLabel="All groups"
+          title="Browse by category"
+          allHref="/categories"
+          allLabel="All categories"
         />
         <div className="flex flex-col gap-px overflow-hidden rounded-lg border border-eiti-border bg-eiti-bordersubtle">
           {groups.map((group) => (
             <Link
               key={group.id}
-              href={`/groups/${group.name}`}
+              href={`/categories/${group.name}`}
               className="flex items-center justify-between gap-4 bg-white px-5 py-4 transition-colors hover:bg-eiti-bg"
             >
               <span className="flex min-w-0 items-center gap-4">

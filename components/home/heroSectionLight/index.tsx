@@ -74,9 +74,9 @@ export default function HeroSectionLight({
           <Stat
             count={stats.orgCount}
             label="Countries"
-            href="/organizations"
+            href="/countries"
           />
-          <Stat count={stats.groupCount} label="Groups" href="/groups" />
+          <Stat count={stats.groupCount} label="Categories" href="/categories" />
           {!!stats.visualizationCount && (
             <Stat
               count={stats.visualizationCount}

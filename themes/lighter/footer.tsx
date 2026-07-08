@@ -3,8 +3,8 @@ import Link from "next/link";
 
 const siteNav = [
   { name: "Search", href: "/search" },
-  { name: "Organizations", href: "/organizations" },
-  { name: "Groups", href: "/groups" },
+  { name: "Countries", href: "/countries" },
+  { name: "Categories", href: "/categories" },
 ];
 
 const LighterThemeFooter: React.FC = () => {

@@ -31,7 +31,7 @@ export default function GroupCard({
     (getConfig().publicRuntimeConfig.DOMAINS ?? []).includes(url.hostname);
   return (
     <Link
-      href={`/groups/${name}`}
+      href={`/categories/${name}`}
       className="flex h-full flex-col gap-4 rounded-lg border border-eiti-border bg-white px-5 py-6 transition-all hover:border-eiti-borderinput hover:shadow-sm"
     >
       {hasCustomImage ? (
@@ -56,7 +56,7 @@ export default function GroupCard({
         </p>
       </div>
       <span className="mt-auto flex items-center justify-between text-sm font-bold text-accent">
-        View group
+        View category
         <span className="text-accent/40">&rarr;</span>
       </span>
     </Link>

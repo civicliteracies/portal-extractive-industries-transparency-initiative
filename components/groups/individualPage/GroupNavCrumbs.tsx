@@ -12,14 +12,17 @@ export default function GroupNavCrumbs({
           Home
         </Link>
         <span className="opacity-40">&rsaquo;</span>
-        <Link href="/groups" className="hover:border-b hover:border-eiti-amber">
-          Groups
+        <Link
+          href="/categories"
+          className="hover:border-b hover:border-eiti-amber"
+        >
+          Categories
         </Link>
         {group.name && group.title && (
           <>
             <span className="opacity-40">&rsaquo;</span>
             <Link
-              href={`/groups/${group.name}`}
+              href={`/categories/${group.name}`}
               className="hover:border-b hover:border-eiti-amber"
             >
               {group.title}

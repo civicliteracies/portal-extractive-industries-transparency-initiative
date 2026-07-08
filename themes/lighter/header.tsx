@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 
 const navLinks = [
   { name: "Search", href: "/search" },
-  { name: "Organizations", href: "/organizations" },
-  { name: "Groups", href: "/groups" },
+  { name: "Countries", href: "/countries" },
+  { name: "Categories", href: "/categories" },
 ];
 
 export default function LighterThemeHeader() {

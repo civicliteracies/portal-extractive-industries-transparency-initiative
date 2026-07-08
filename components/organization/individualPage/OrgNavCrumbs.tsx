@@ -13,10 +13,10 @@ export default function OrgNavCrumbs({
         </Link>
         <span className="opacity-40">&rsaquo;</span>
         <Link
-          href="/organizations"
+          href="/countries"
           className="hover:border-b hover:border-eiti-amber"
         >
-          Organizations
+          Countries
         </Link>
         {org.name && org.title && (
           <>

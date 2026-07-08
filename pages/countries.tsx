@@ -43,7 +43,7 @@ function Main({
     <>
       <Layout>
         <SearchHero
-          title="Organizations"
+          title="Countries"
           searchValue={searchString}
           onChange={setSearchString}
         />

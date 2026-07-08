@@ -5,6 +5,7 @@ import { CKAN } from "@portaljs/ckan";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { RiArrowLeftLine } from "react-icons/ri";
 import ResourcesBadges from "@/components/dataset/_shared/ResourcesBadges";
 import { PrimeReactProvider } from "primereact/api";
@@ -76,6 +77,27 @@ export default function ResourcePage({
   const resourceFormat = resource.format.toLowerCase();
   const router = useRouter();
   const { dataset } = router.query;
+
+  // The Excel viewer from @portaljs/components renders an AG Grid whose
+  // scrollable body contains no focusable content, so keyboard users cannot
+  // scroll it (axe: scrollable-region-focusable). Making the viewport itself
+  // focusable would break the grid's ARIA child chain (aria-required-children),
+  // so instead restore AG Grid's own convention: one focusable cell as the
+  // keyboard entry point. Remove once fixed upstream.
+  useEffect(() => {
+    const makeFocusable = () => {
+      document.querySelectorAll(".ag-body-viewport").forEach((viewport) => {
+        if (!viewport.querySelector('[tabindex="0"]')) {
+          const firstCell = viewport.querySelector(".ag-cell");
+          firstCell?.setAttribute("tabindex", "0");
+        }
+      });
+    };
+    makeFocusable();
+    const observer = new MutationObserver(makeFocusable);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <PrimeReactProvider>

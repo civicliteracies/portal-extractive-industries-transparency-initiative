@@ -60,7 +60,7 @@ export default function DatasetSearchFilters() {
         </FacetCard>
 
         <FacetCard
-          title="Organization"
+          title="Country"
           showClear={options.orgs.length > 0}
           clearAction={() => {
             setOptions({
@@ -102,7 +102,7 @@ export default function DatasetSearchFilters() {
         </FacetCard>
         {searchFacets.groups?.items.length > 0 && (
           <FacetCard
-            title="Group"
+            title="Category"
             showClear={options.groups.length > 0}
             clearAction={() => {
               setOptions({

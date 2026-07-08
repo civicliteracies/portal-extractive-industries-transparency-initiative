@@ -70,7 +70,7 @@ export default async function handler(
       "  dataset: /@{org}/{name}",
       "  resource: /@{org}/{dataset}/r/{resource}",
       "  organization: /@{name}",
-      "  group: /groups/{name}",
+      "  group: /categories/{name}",
       "  search: /search",
     ].join("\n");
 
