@@ -1,12 +1,10 @@
-import _ThemeBase from "../../themes/default/layout";
-import { DefaultTheme } from "../../themes/default";
+import _ThemeBase from "../../themes/lighter/layout";
 import { LighterTheme } from "../../themes/lighter";
 import { createContext, FC, ReactNode, useContext, useState } from "react";
 import { Theme } from "@/types/theme";
 
 const themes: Record<string, Theme> = {
   lighter: LighterTheme,
-  default: DefaultTheme,
 };
 
 interface ThemeContextProps {
@@ -18,17 +16,17 @@ const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
 const ThemeProvider: FC<{ children: ReactNode; themeName?: string }> = ({
   children,
-  themeName = "default",
+  themeName = "lighter",
 }) => {
   const [theme, setTheme] = useState<Theme>(
-    themes[themeName] || themes.default
+    themes[themeName] || themes.lighter
   );
 
   const switchTheme = (themeName: string) => {
-    setTheme(themes[themeName] || themes.default);
+    setTheme(themes[themeName] || themes.lighter);
   };
 
-  const themeDefinition = themes[themeName] || themes.default;
+  const themeDefinition = themes[themeName] || themes.lighter;
   const ThemeBase = themeDefinition.layout || _ThemeBase;
 
   return (

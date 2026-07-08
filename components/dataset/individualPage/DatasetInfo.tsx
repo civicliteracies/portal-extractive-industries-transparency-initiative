@@ -1,10 +1,6 @@
 import Link from "next/link";
 import { Resource, Tag } from "@portaljs/ckan";
-import {
-  ArrowDownTrayIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from "@heroicons/react/20/solid";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { getTimeAgo } from "@/lib/utils";
 import { Dataset } from "@/schemas/dataset.interface";
 import { RiExternalLinkLine } from "react-icons/ri";
@@ -16,13 +12,25 @@ function uniqueFormat(resources) {
   return [...new Set(formats)];
 }
 
+function MetaRow({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3 border-b border-eiti-bordersubtle py-2 text-sm last:border-b-0">
+      <span className="text-xs font-bold uppercase tracking-label text-eiti-muted">
+        {label}
+      </span>
+      <span className="text-right font-semibold text-eiti-ink tabular-nums">
+        {value}
+      </span>
+    </div>
+  );
+}
+
 export default function DatasetInfo({ dataset }: { dataset: Dataset }) {
   const [isTruncated, setIsTruncated] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const textRef = useRef<HTMLParagraphElement>(null);
 
-  const description =
-    dataset.notes?.replace(/<\/?[^>]+(>|$)/g, "") || "No description";
+  const description = dataset.notes?.replace(/<\/?[^>]+(>|$)/g, "");
 
   const metaFormats = [
     { format: "jsonld", label: "JSON-LD" },
@@ -60,186 +68,121 @@ export default function DatasetInfo({ dataset }: { dataset: Dataset }) {
   }, [dataset.notes]);
 
   return (
-    <div className="flex flex-col">
-      <div className="flex flex-col gap-y-3">
-        {dataset.type === "visualization" && !!dataset.external_url && (
-          <a
-            href={dataset.external_url}
-            className={`font-medium flex items-center gap-1 text-accent`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <RiExternalLinkLine className="w-5 h-5" />
-            Access Visualization
-          </a>
-        )}
-        {!!dataset.resources.length && (
-          <span className="font-medium text-gray-500 inline">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-5 h-5 text-accent inline mr-1"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776"
-              />
-            </svg>
-            Files: {dataset.resources.length}
-          </span>
-        )}
-
-        {!!dataset.resources.length && (
-          <span className="font-medium text-gray-500 inline">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="h-5 w-5 text-accent inline mr-1"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M7.5 3.75H6A2.25 2.25 0 003.75 6v1.5M16.5 3.75H18A2.25 2.25 0 0120.25 6v1.5m0 9V18A2.25 2.25 0 0118 20.25h-1.5m-9 0H6A2.25 2.25 0 013.75 18v-1.5M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
-            </svg>
-            Formats: {uniqueFormat(dataset.resources).join(", ")}
-          </span>
-        )}
-        <span className="font-medium text-gray-500 inline">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-5 h-5 text-accent inline mr-1"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
-            />
-          </svg>
-          Created:{" "}
-          {dataset.metadata_created && getTimeAgo(dataset.metadata_created)}
-        </span>
-        {dataset.source && dataset.source.length > 0 && (
-          <div className="font-medium text-gray-500">
-            <div className="flex items-start gap-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className="w-5 h-5 text-accent inline-block mt-0.5 flex-shrink-0"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244"
-                />
-              </svg>
-              <div className="flex flex-col gap-1">
-                <span>Source{dataset.source.length > 1 ? "s" : ""}:</span>
-                <div className="flex flex-col gap-1.5">
-                  {dataset.source.map((url, index) => (
-                    <a
-                      key={index}
-                      href={url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-accent hover:text-darkaccent flex items-center gap-1 break-all transition"
-                    >
-                      <RiExternalLinkLine className="w-4 h-4 flex-shrink-0" />
-                      <span className="underline">{url}</span>
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        <span className="font-medium text-gray-500 inline">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-5 w-5 text-accent inline mr-1"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          Updated:{" "}
-          {dataset.metadata_modified && getTimeAgo(dataset.metadata_modified)}
-        </span>
-      </div>
-      <div className="py-4 my-4 border-y">
-        <div
-          ref={textRef}
-          className={`text-sm font-normal text-stone-500 transition-all ${
-            !showFullDescription ? "line-clamp-4" : ""
-          }`}
+    <div className="rounded-lg border border-eiti-border bg-white p-5">
+      {dataset.type === "visualization" && !!dataset.external_url && (
+        <a
+          href={dataset.external_url}
+          className="mb-3 flex items-center gap-1 text-sm font-bold text-accent hover:text-eiti-navy2"
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <MarkdownRenderer content={description} />
-        </div>
-        {isTruncated && (
-          <button
-            onClick={() => setShowFullDescription(!showFullDescription)}
-            className="mt-2 border-b border-accent text-stone-500 hover:text-accent"
-          >
-            {showFullDescription ? (
-              <span className="flex items-center">
-                Read less <ChevronUpIcon className="text-accent w-4" />
-              </span>
-            ) : (
-              <span className="flex items-center">
-                Read more <ChevronDownIcon className="text-accent w-4" />
-              </span>
-            )}
-          </button>
+          <RiExternalLinkLine className="h-4 w-4" />
+          Access visualization
+        </a>
+      )}
+      <div>
+        {!!dataset.resources.length && (
+          <MetaRow label="Files" value={dataset.resources.length} />
+        )}
+        {!!dataset.resources.length && (
+          <MetaRow
+            label="Formats"
+            value={uniqueFormat(dataset.resources).join(", ")}
+          />
+        )}
+        {dataset.metadata_created && (
+          <MetaRow label="Created" value={getTimeAgo(dataset.metadata_created)} />
+        )}
+        {dataset.metadata_modified && (
+          <MetaRow
+            label="Updated"
+            value={getTimeAgo(dataset.metadata_modified)}
+          />
         )}
       </div>
-      <div className="flex flex-wrap gap-1">
-        {dataset.tags?.map((tag: Tag) => (
-          <span
-            className="bg-accent px-4 py-1 rounded-full text-white"
-            key={tag.id}
-          >
-            {tag.display_name}
+      {dataset.source && dataset.source.length > 0 && (
+        <div className="mt-4 text-sm">
+          <span className="text-xs font-bold uppercase tracking-label text-eiti-muted">
+            Source{dataset.source.length > 1 ? "s" : ""}
           </span>
-        ))}
-      </div>
-      <span className="font-medium text-gray-500 inline">
-        <div className="flex flex-wrap gap-x-2 items-center">
-          <div>Export metadata as: </div>
-          {metaFormats.map((item) => (
-            <div key={item.format}>
-              <Link
-                href={`${dmsBaseUrl}/dataset/${dmsDatasetName}.${item.format}`}
-                className="font-semibold group flex gap-0.5 hover:text-darkaccent"
+          <div className="mt-1 flex flex-col gap-1.5">
+            {dataset.source.map((url, index) => (
+              <a
+                key={index}
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 break-all text-accent transition hover:text-eiti-navy2"
               >
-                <div className="text-accent group-hover:text-darkaccent transition flex items-center justify-center">
-                  <ArrowDownTrayIcon className="h-4 w-4" />
-                </div>
-                <div className="uppercase">{item.label}</div>
-              </Link>
+                <RiExternalLinkLine className="h-4 w-4 flex-shrink-0" />
+                <span className="underline">{url}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+      <div className="mt-4 border-t border-eiti-bordersubtle pt-4">
+        {description ? (
+          <>
+            <div
+              ref={textRef}
+              className={`text-sm text-eiti-muted transition-all ${
+                !showFullDescription ? "line-clamp-4" : ""
+              }`}
+            >
+              <MarkdownRenderer content={description} />
             </div>
+            {isTruncated && (
+              <button
+                onClick={() => setShowFullDescription(!showFullDescription)}
+                className="mt-2 text-sm font-semibold text-accent hover:text-eiti-navy2"
+              >
+                {showFullDescription ? (
+                  <span className="flex items-center">
+                    Read less <ChevronUpIcon className="w-4" />
+                  </span>
+                ) : (
+                  <span className="flex items-center">
+                    Read more <ChevronDownIcon className="w-4" />
+                  </span>
+                )}
+              </button>
+            )}
+          </>
+        ) : (
+          <p className="text-sm text-eiti-muted">
+            <span className="opacity-40">&mdash;</span> No description provided
+          </p>
+        )}
+      </div>
+      {!!dataset.tags?.length && (
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {dataset.tags.map((tag: Tag) => (
+            <span
+              className="rounded-full border border-eiti-borderinput bg-white px-3 py-1 text-xs font-semibold text-accent"
+              key={tag.id}
+            >
+              {tag.display_name}
+            </span>
           ))}
         </div>
-      </span>
+      )}
+      <div className="mt-4 border-t border-eiti-bordersubtle pt-4">
+        <span className="text-xs font-bold uppercase tracking-label text-accent">
+          Export metadata
+        </span>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {metaFormats.map((item) => (
+            <Link
+              key={item.format}
+              href={`${dmsBaseUrl}/dataset/${dmsDatasetName}.${item.format}`}
+              className="rounded-full border border-eiti-borderinput bg-white px-3 py-1 text-xs font-semibold text-accent transition-colors hover:border-accent hover:bg-accent hover:text-white"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }

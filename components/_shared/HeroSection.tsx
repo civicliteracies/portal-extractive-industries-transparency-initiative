@@ -1,23 +1,34 @@
 export default function HeroSection({
   title = "Search",
   titleAccent = "",
+  eyebrow = "",
+  subtitle = "",
   cols = "1",
+}: {
+  title?: string;
+  titleAccent?: string;
+  eyebrow?: string;
+  subtitle?: string;
+  /** Unused; kept for caller compatibility until detail pages are reworked. */
+  cols?: string;
 }) {
   return (
-    <section className={`row-start-1 row-span-3 col-span-full`}>
-      <div
-        className="bg-cover bg-center bg-no-repeat  pt-[60px] pb-[36px] flex flex-col"
-        style={{}}
-      >
-        <div
-          className={`grid md:grid-cols-${cols} mx-auto items-center grow mx-auto custom-container bg-white`}
-        >
-          <div className="col-span-1">
-            <h1 className="text-[24px] md:text-[50px] font-black lg:max-w-[80%]">
-              {title} <span className="text-accent">{titleAccent}</span>
-            </h1>
-          </div>
-        </div>
+    <section>
+      <div className="custom-container mx-auto pt-12 pb-8">
+        {eyebrow && (
+          <span className="text-xs font-bold uppercase tracking-label text-accent">
+            {eyebrow}
+          </span>
+        )}
+        <h1 className="mt-2 text-3xl md:text-[44px] font-extrabold leading-[1.12] tracking-tight text-accent capitalize">
+          {title}{" "}
+          {titleAccent && <span className="text-eiti-navy2">{titleAccent}</span>}
+        </h1>
+        {subtitle && (
+          <p className="mt-3 max-w-[62ch] text-base text-eiti-muted">
+            {subtitle}
+          </p>
+        )}
       </div>
     </section>
   );

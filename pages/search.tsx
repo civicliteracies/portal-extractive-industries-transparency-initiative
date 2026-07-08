@@ -6,7 +6,6 @@ import DatasetSearchFilters from "@/components/dataset/search/DatasetSearchFilte
 import ListOfDatasets from "@/components/dataset/search/ListOfDatasets";
 import { searchDatasets } from "@/lib/queries/dataset";
 import HeroSection from "@/components/_shared/HeroSection";
-import { useTheme } from "@/components/theme/theme-provider";
 import {
   SearchStateProvider,
   useSearchState,
@@ -58,23 +57,22 @@ export default function DatasetSearch({
 
 function SearchPageContent() {
   const { options } = useSearchState();
-  const {
-    theme: { styles },
-  } = useTheme();
 
   return (
     <Layout>
-      <div className="grid grid-rows-searchpage-hero">
-        <HeroSection title="Search" titleAccent={`${options.type}s`} />
-        <section className={`grid row-start-3 row-span-2 col-span-full pt-4 `}>
-          <div className={`custom-container bg-white ${styles.shadowMd}`}>
-            <DatasetSearchForm />
-          </div>
-        </section>
-      </div>
-      <div className="custom-container bg-white">
-        <article className="grid grid-cols-1 lg:grid-cols-9 gap-x-6 xl:gap-x-12 pt-[30px] pb-[30px]">
-          <div className="lg:col-span-3  lg:sticky top-3 h-fit">
+      <HeroSection
+        title="Search"
+        titleAccent={`${options.type}s`}
+        subtitle="Reports and data files submitted by EITI member countries."
+      />
+      <section className="custom-container mx-auto">
+        <div className="overflow-hidden rounded-lg border border-eiti-border bg-white">
+          <DatasetSearchForm />
+        </div>
+      </section>
+      <div className="custom-container mx-auto">
+        <article className="grid grid-cols-1 lg:grid-cols-9 gap-x-6 xl:gap-x-8 pt-[30px] pb-[30px]">
+          <div className="lg:col-span-3 lg:sticky top-3 h-fit">
             <DatasetSearchFilters />
           </div>
           <div className="lg:col-span-6">

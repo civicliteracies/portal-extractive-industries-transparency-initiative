@@ -1,13 +1,10 @@
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/router";
-import { useTheme } from "@/components/theme/theme-provider";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
-const SearchForm: React.FC = () => {
+const SearchForm: React.FC<{ datasetCount?: number }> = ({ datasetCount }) => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const { theme } = useTheme();
-  const { styles } = theme;
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     if (e) {
@@ -22,7 +19,7 @@ const SearchForm: React.FC = () => {
   return (
     <form
       onSubmit={(e) => handleSubmit(e)}
-      className="items-center flex flex-row gap-4"
+      className="items-center flex flex-row gap-3"
     >
       <input
         id="search-form-input"
@@ -31,15 +28,21 @@ const SearchForm: React.FC = () => {
         onChange={(e) => {
           setSearchQuery(e.target.value);
         }}
-        placeholder="Search datasets..."
+        placeholder={
+          datasetCount
+            ? `Search ${datasetCount} datasets…`
+            : "Search datasets…"
+        }
         aria-label="Search datasets"
-        className={`w-3/4  rounded-[10px] border-1 bg-white  py-3 px-4 md:py-4 md:px-4 border leading-none placeholder-gray-500 ${styles.shadowMd}`}
+        className="w-full rounded-md bg-white py-3.5 px-4 leading-none text-eiti-ink placeholder-gray-500 border border-transparent focus:outline-none focus:ring-[3px] focus:ring-eiti-amber/50"
       />
+      {/* Amber surfaces carry navy text: white on amber fails WCAG AA. */}
       <button
         type="submit"
-        className={`text-lg border-b-[4px] border-accent rounded-[10px] ${styles.bgDark}  uppercase font-medium px-3 py-3 md:px-10 md:py-4 leading-none lg:mt-0 ${styles.textLight} `}
+        aria-label="Search"
+        className="rounded-md bg-eiti-amber text-eiti-navy text-[13px] font-bold uppercase tracking-label px-4 py-4 md:px-8 leading-none transition-colors hover:bg-[#E09804]"
       >
-        <MagnifyingGlassIcon width={24} className="sm:hidden" />
+        <MagnifyingGlassIcon width={20} className="sm:hidden" aria-hidden="true" />
         <span className="hidden sm:block">Search</span>
       </button>
     </form>

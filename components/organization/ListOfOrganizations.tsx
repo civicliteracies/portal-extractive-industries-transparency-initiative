@@ -36,6 +36,9 @@ export default function ListOfOrgs({
             display_name={org.display_name}
             image_display_url={org.image_display_url}
             name={org.name}
+            packageCount={
+              (org as unknown as { package_count?: number }).package_count
+            }
           />
         </div>
       ))}

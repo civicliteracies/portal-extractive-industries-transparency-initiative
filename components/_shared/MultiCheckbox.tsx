@@ -47,10 +47,10 @@ export const MultiCheckbox = ({
       <label
         htmlFor={`${name}-${value}`}
         tabIndex={0}
-        className={`h-5 w-5 min-w-[1.25rem] flex items-center justify-center rounded border-2 cursor-pointer ${
+        className={`h-4 w-4 min-w-[1rem] flex items-center justify-center rounded-[3px] border-[1.5px] cursor-pointer ${
           active
             ? "bg-accent border-accent text-white"
-            : "bg-white border-gray-300"
+            : "bg-white border-eiti-borderinput"
         } transition-colors`}
         onKeyDown={(e) => {
           if (e.key === " " || e.key === "Enter") {
@@ -58,16 +58,18 @@ export const MultiCheckbox = ({
           }
         }}
       >
-        {active && <CheckIcon width={16} />}
+        {active && <CheckIcon width={12} />}
         <span className="sr-only">{label}</span>
       </label>
       <span
         onClick={select}
-        className="ml-3 text-[#5F5F5F] cursor-pointer flex gap-1 w-full"
+        className={`ml-3 cursor-pointer flex gap-1 w-full text-sm ${
+          active ? "font-bold text-accent" : "text-eiti-ink"
+        }`}
       >
         {label}
         {count && (
-          <span className="ml-auto w-[24px] h-[24px] inline-flex items-center justify-center rounded-full bg-gray-50 px-1.5 py-0.5 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10">
+          <span className="ml-auto text-xs font-medium text-eiti-muted tabular-nums self-center">
             {count}
           </span>
         )}

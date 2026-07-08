@@ -14,33 +14,37 @@ export default function ResourcesList({
   datasetName,
 }: ResourcesListProps) {
   return (
-    <div className="py-8 w-full max-h-[600px] flex flex-col gap-4 ">
+    <div className="flex w-full flex-col gap-3 py-6">
       {resources.map((resource: Resource) => (
         <div
           key={resource.id}
-          className="flex flex-col md:flex-row  md:justify-between w-full gap-4  py-3 md:items-center px-2"
+          className="flex w-full flex-col gap-4 rounded-lg border border-eiti-border bg-white px-5 py-4 md:flex-row md:items-center md:justify-between"
         >
-          <article className="grid grid-cols-1 sm:grid-cols-6 gap-x-2 grow ">
-            <div className="col-span-5 place-content-start flex flex-col gap-0">
-              <h4 className=" md:m-0 font-semibold text-lg text-zinc-900 leading-tight line-clamp-3 pr-5">
-                {resource.name || "No title"}
-              </h4>
-              <p className="text-sm font-normal text-stone-500 line-clamp-4">
-                {resource.description || "No description"}
+          <div className="min-w-0 grow">
+            <h4 className="text-[15px] font-bold leading-snug text-accent line-clamp-3">
+              {resource.name || "No title"}
+            </h4>
+            {resource.description ? (
+              <p className="mt-1 line-clamp-2 text-sm text-eiti-muted">
+                {resource.description}
               </p>
-              <div className="mt-2">
-                <ResourcesBadges resources={[resource]} />
-              </div>
+            ) : (
+              <p className="mt-1 text-sm text-eiti-muted">
+                <span className="opacity-40">&mdash;</span> No description
+              </p>
+            )}
+            <div className="mt-2">
+              <ResourcesBadges resources={[resource]} />
             </div>
-          </article>
-          <div className="flex  gap-2 justify-start pt-2 sm:pt-0">
+          </div>
+          <div className="flex flex-none gap-2 pt-2 sm:pt-0">
             {(["csv", "pdf", "xlsx", "xls", "geojson"].includes(
               resource.format.toLowerCase()
             ) ||
               resource?.iframe) && (
               <Link
                 href={`/@${orgName}/${datasetName}/r/${resource.id}`}
-                className="px-2 py-1 border  h-fit shadow hover:shadow-lg transition-all text-sm  text-center text-dark rounded font-roboto font-bold border-accent-50 hover:border-accent-100 hover:bg-accent-100  duration-150 flex items-center justify-center gap-1"
+                className="flex h-9 items-center justify-center gap-1.5 rounded-md border border-eiti-borderinput bg-white px-4 text-xs font-bold uppercase tracking-label text-accent transition-colors hover:border-accent hover:bg-accent hover:text-white"
               >
                 <RiEyeLine />
                 <span>Preview</span>
@@ -49,7 +53,7 @@ export default function ResourcesList({
             {resource.url && (
               <Link
                 href={resource.url}
-                className="bg-accent px-2 py-1 h-fit shadow hover:shadow-lg transition-all text-sm  text-center text-white rounded font-roboto font-bold hover:bg-darkaccent hover:text-white duration-150 flex items-center justify-center gap-1"
+                className="flex h-9 items-center justify-center gap-1.5 rounded-md border border-accent bg-accent px-4 text-xs font-bold uppercase tracking-label text-white transition-colors hover:bg-eiti-navy2"
               >
                 <RiDownload2Fill />
                 <span>Download</span>

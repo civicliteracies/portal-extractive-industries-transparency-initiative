@@ -1,0 +1,7 @@
+Running Pa11y on 4 URLs:
+ > http://localhost:3000/ - 0 errors
+ > http://localhost:3000/groups - 0 errors
+ > http://localhost:3000/organizations - 0 errors
+ > http://localhost:3000/search - 0 errors
+
+✔ 4/4 URLs passed

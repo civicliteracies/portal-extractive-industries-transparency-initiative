@@ -84,22 +84,15 @@ export default function ResourcePage({
         <div className="custom-container pt-[30px]">
           <Link
             href={`/@${orgName}/${dataset}`}
-            className="flex items-center  text-sm"
+            className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-label text-accent hover:border-b hover:border-eiti-amber"
           >
-            <RiArrowLeftLine className="text-[32px]" />
-            <span className="sr-only">Go back</span>
+            <RiArrowLeftLine className="text-[16px]" />
+            <span>Back to dataset</span>
           </Link>
-          <div
-            className="bg-cover bg-center bg-no-repeat flex flex-col"
-            style={{}}
-          >
-            <div className={` bg-white`}>
-              <div className="col-span-1">
-                <h1 className="text-[24px] md:text-[50px] font-black lg:max-w-[80%]">
-                  {resource.name}
-                </h1>
-              </div>
-            </div>
+          <div className="flex flex-col">
+            <h1 className="mt-3 text-[24px] md:text-[40px] font-extrabold leading-[1.15] tracking-tight text-accent lg:max-w-[90%] break-words">
+              {resource.name}
+            </h1>
           </div>
           <div className="mt-4">
             <ResourcesBadges resources={[resource]} />
@@ -109,7 +102,7 @@ export default function ResourcePage({
           <section className=" pb-16">
             <div className="py-2 custom-container ">
               <div className="flex flex-col  md:flex-row gap-4 md:items-center py-2">
-                <span className="font-medium text-gray-500 inline">
+                <span className="text-sm text-eiti-muted inline">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -127,7 +120,7 @@ export default function ResourcePage({
                   Created: {resource.created &&
                     getTimeAgo(resource.created)}
                 </span>
-                <span className="font-medium text-gray-500 inline">
+                <span className="text-sm text-eiti-muted inline">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -146,7 +139,7 @@ export default function ResourcePage({
                   {resource.metadata_modified &&
                     getTimeAgo(resource.metadata_modified)}
                 </span>
-                <span className="font-medium text-gray-500 inline">
+                <span className="text-sm text-eiti-muted inline">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -161,13 +154,13 @@ export default function ResourcePage({
                       d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125"
                     />
                   </svg>
-                  Size: {resource.size || "N/A"}
+                  Size: {resource.size || "\u2014"}
                 </span>
               </div>
               <div className=" py-4">
                 <Link
                   href={resource.url}
-                  className="bg-accent h-auto py-2 px-4 text-sm text-white rounded-xl font-roboto font-bold hover:bg-darkaccent hover:text-white duration-150 flex items-center gap-1 w-fit"
+                  className="bg-accent h-11 px-6 text-[13px] uppercase tracking-label text-white rounded-md font-bold hover:bg-eiti-navy2 transition-colors duration-150 flex items-center gap-2 w-fit"
                 >
                   Download
                   <svg
@@ -187,7 +180,7 @@ export default function ResourcePage({
                 </Link>
               </div>
               <div className="py-4">
-                <p className="text-stone-500">{resource.description}</p>
+                <p className="text-eiti-muted max-w-[72ch]">{resource.description}</p>
               </div>
               <div className="">
                 {resourceFormat == "csv" ? (
