@@ -1,8 +1,11 @@
 {
   "routes": [
     "/",
-    "/groups",
-    "/organizations",
+    "/@eiti-myanmar/fy2015-2016-myanmar-eiti-report",
+    "/@eiti-myanmar/fy2015-2016-myanmar-eiti-report/r/c9992c80-ec91-4e06-95c3-6608d7ca6ba8",
+    "/ai-terms-of-use",
+    "/categories",
+    "/countries",
     "/search"
   ]
 }

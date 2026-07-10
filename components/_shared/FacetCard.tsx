@@ -1,5 +1,3 @@
-import { useTheme } from "../theme/theme-provider";
-
 export default function FacetCard({
   title,
   children,
@@ -11,27 +9,25 @@ export default function FacetCard({
   showClear?: boolean;
   clearAction?: Function;
 }) {
-  const {
-    theme: { styles },
-  } = useTheme();
-
   return (
-    <section className={`bg-white rounded-[10px] p-5 mb-4  ${styles.shadowMd}`}>
-      <div className="flex items-center pb-4 ">
-        {title && <h1 className="font-bold m-0">{title}</h1>}
-      </div>
-      <div>{children}</div>
-      {showClear && (
-        <div>
-          <span
-            role="button"
-            className="text-sm cursor-pointer hover:underline"
-            onClick={() => clearAction && clearAction()}
-          >
-            Clear
-          </span>
+    <section className="mb-4 overflow-hidden rounded-lg border border-eiti-border bg-white">
+      {title && (
+        <div className="flex items-center justify-between border-b border-eiti-bordersubtle px-5 py-3.5">
+          <h2 className="m-0 text-xs font-bold uppercase tracking-label text-accent">
+            {title}
+          </h2>
+          {showClear && (
+            <button
+              type="button"
+              className="text-xs font-semibold text-eiti-muted hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-eiti-amber"
+              onClick={() => clearAction && clearAction()}
+            >
+              Clear
+            </button>
+          )}
         </div>
       )}
+      <div className="px-5 py-4">{children}</div>
     </section>
   );
 }

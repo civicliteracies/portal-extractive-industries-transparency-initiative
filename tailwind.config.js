@@ -2,7 +2,9 @@ const colors = require("tailwindcss/colors");
 const Color = require("color");
 const defaultTheme = require("tailwindcss/defaultTheme");
 
-const themeColor = process.env.NEXT_PUBLIC_THEME_COLOR || "#4977AB";
+// EITI navy. Deployments can still override via env, but the repo carries its
+// own brand so a bare checkout renders correctly.
+const themeColor = process.env.NEXT_PUBLIC_THEME_COLOR || "#132856";
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: [
@@ -30,8 +32,26 @@ module.exports = {
         },
         lightaccent: Color(themeColor).lighten(0.3).hex(), // Lighten by 20%
         darkaccent: Color(themeColor).darken(0.3).hex(), // Darken by 20%
-        darkbrown: "#A75001",
-        darkerbrown: "#964800",
+        // EITI design-system tokens. Amber surfaces must carry navy text:
+        // white on amber is 2.01:1 and fails WCAG AA.
+        eiti: {
+          navy: "#132856",
+          navy2: "#15517F",
+          amber: "#F6A70A",
+          // Amber-toned text on light surfaces. The design system's #B57905
+          // fails WCAG AA at small sizes (3.68:1 on white); #8F5F04 passes
+          // with margin on both white and the page background.
+          amberink: "#8F5F04",
+          green: "#16795E",
+          ink: "#111A35",
+          muted: "#55607A",
+          bg: "#F8FAFB",
+          surface: "#FFFFFF",
+          panel: "#FBFCFD",
+          border: "#E4E7EC",
+          borderinput: "#D7DCE3",
+          bordersubtle: "#E9ECF1",
+        },
         background: {
           DEFAULT: colors.white,
           dark: colors.slate[900],
@@ -47,15 +67,10 @@ module.exports = {
       },
 
       fontFamily: {
-        sans: ["Inter", ...defaultTheme.fontFamily.sans],
-        roboto: ["Roboto", "sans-serif"],
-        raleway: ["raleway", "sans-serif"],
-        poppins: ["var(--font-poppins)"],
-        montserrat: ["var(--font-montserrat)"],
-        inter: ["var(--font-inter)"]
+        sans: ["var(--font-metropolis)", ...defaultTheme.fontFamily.sans],
       },
-      boxShadow: {
-        blogImg: "inset 0 0 0 50vw rgba(0,28,49,0.76)",
+      letterSpacing: {
+        label: "0.06em",
       },
       gridTemplateRows: {
         7: "repeat(7, minmax(0, 1fr))",
@@ -68,6 +83,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/line-clamp")],
-  plugins: [require("@tailwindcss/typography")],
+  plugins: [
+    require("@tailwindcss/line-clamp"),
+    require("@tailwindcss/typography"),
+  ],
 };

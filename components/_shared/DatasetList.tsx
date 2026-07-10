@@ -14,7 +14,6 @@ interface DatasetListProps {
 
 export default function DatasetList({ type, name, initialDatasets }: DatasetListProps) {
   const [offset, setOffset] = useState(0);
-  const [subsetOfPages, setSubsetOfPages] = useState(0);
   const limit = 10;
 
   const fq = type === "organization" 
@@ -83,8 +82,6 @@ export default function DatasetList({ type, name, initialDatasets }: DatasetList
       {count > limit && (
         <div className="flex justify-center mt-6">
           <Pagination
-            subsetOfPages={subsetOfPages}
-            setSubsetOfPages={setSubsetOfPages}
             count={count}
             offset={offset}
             onPageChange={handlePageChange}

@@ -1,6 +1,5 @@
 import "@portaljs/components/styles.css";
 import "@/styles/globals.scss";
-import "@/styles/tabs.scss";
 
 import type { AppProps } from "next/app";
 import { DefaultSeo } from "next-seo";
@@ -12,25 +11,21 @@ import Loader from "../components/_shared/Loader";
 import ThemeProvider from "../components/theme/theme-provider";
 import QuerylessAssistant from "../components/queryless/QuerylessAssistant";
 
-import { Inter, Montserrat, Poppins } from "next/font/google";
+import localFont from "next/font/local";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["400", "700"],
-  variable: "--font-poppins",
-});
-
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat"
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter"
+// EITI brand font, self-hosted (same files as the SOE database site).
+const metropolis = localFont({
+  src: [
+    { path: "../fonts/metropolis/metropolis-regular.otf", weight: "400" },
+    { path: "../fonts/metropolis/metropolis-medium.otf", weight: "500" },
+    { path: "../fonts/metropolis/metropolis-semibold.otf", weight: "600" },
+    { path: "../fonts/metropolis/metropolis-bold.otf", weight: "700" },
+    { path: "../fonts/metropolis/metropolis-extrabold.otf", weight: "800" },
+  ],
+  variable: "--font-metropolis",
 });
 
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID ?? '';
@@ -54,10 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
   }, [router.events]);
   return (
-    <div
-      id="app-shell"
-      className={cn(poppins.variable, montserrat.variable, inter.variable)}
-    >
+    <div id="app-shell" className={cn(metropolis.variable, "font-sans")}>
       <ThemeProvider themeName={theme}>
         <DefaultSeo {...SEO} />
         <Loader />

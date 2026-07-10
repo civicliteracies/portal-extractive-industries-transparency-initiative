@@ -2,7 +2,7 @@ import Slider from "rc-slider";
 import { sortConfigProps, useResourceData } from "./DataProvider";
 import { isValidDate } from "./utils";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RiPushpin2Line } from "react-icons/ri";
 import DateRange from "./DateRange";
 
@@ -17,17 +17,29 @@ export default function TableHeadCell({ col: key }) {
     updateFilter,
   } = useResourceData();
 
-  const min = Math.min(...data.map((row) => row[key]));
-  const max = Math.max(...data.map((row) => row[key]));
+  // Columns detected as numeric can still contain nulls or strings in later
+  // rows; Math.min over those yields NaN, which breaks the slider's ARIA
+  // attributes and silently resets its range to rc-slider's 0-100 default.
+  const numericValues = data
+    .map((row) => row[key])
+    .filter((v): v is number => typeof v === "number" && Number.isFinite(v));
+  const min = numericValues.length ? Math.min(...numericValues) : 0;
+  const max = numericValues.length ? Math.max(...numericValues) : 0;
 
   const [value, setValue] = useState<number[]>([min, max]);
 
+  // A data refresh can change the column bounds; without this the slider
+  // keeps stale handle positions from the previous dataset.
+  useEffect(() => {
+    setValue([min, max]);
+  }, [min, max]);
+
   return (
     <th
-      className={`py-2 min-w-[140px] border-0 text-left bg-accent-50 whitespace-nowrap group  ${
+      className={`py-2 min-w-[140px] border-0 text-left bg-accent whitespace-nowrap group  ${
         !visibleColumns.includes(key) ? "hidden" : ""
       } ${
-        pinnedColumns.includes(key) ? "sticky left-0 z-10 bg-accent-50 " : ""
+        pinnedColumns.includes(key) ? "sticky left-0 z-10 bg-accent " : ""
       }`}
       role="columnheader"
       scope="col"
@@ -43,9 +55,9 @@ export default function TableHeadCell({ col: key }) {
               )
             }
             title={key}
-            className="text-sm text-left truncate font-normal text-gray-600"
+            className="text-sm text-left truncate font-normal text-white"
           >
-            <span className="uppercase font-[600]">{key}</span>{" "}
+            <span className="uppercase font-[700] text-xs tracking-[0.04em]">{key}</span>{" "}
             {sortConfig?.key === key
               ? sortConfig.direction === "asc"
                 ? "↑"
@@ -56,7 +68,7 @@ export default function TableHeadCell({ col: key }) {
         <PinButton col={key} />
       </div>
 
-      <div className="border-t border-accent-100 px-3 pt-2">
+      <div className="border-t border-white/20 px-3 pt-2">
         {/* Filters */}
         {typeof data[0]?.[key] === "number" ? (
           <div className=" h-[34px] flex items-center w-full group">
@@ -65,13 +77,18 @@ export default function TableHeadCell({ col: key }) {
                 <Slider
                   range
                   value={value}
-                  min={Math.min(...data.map((row) => row[key]))}
-                  max={Math.max(...data.map((row) => row[key]))}
+                  min={min}
+                  max={max}
                   onChange={(v: number[]) => {
                     setValue(v);
                     updateFilter(key, v);
                   }}
-                  aria-label={`Range filter for ${key}`}
+                  // A range slider renders two handles; a plain aria-label on
+                  // the wrapper names neither, which axe flags as serious.
+                  ariaLabelForHandle={[
+                    `Minimum ${key} filter`,
+                    `Maximum ${key} filter`,
+                  ]}
                 />
               </div>
             </div>
@@ -100,7 +117,7 @@ export default function TableHeadCell({ col: key }) {
       </div>
 
       {pinnedColumns.includes(key) && (
-        <span className="absolute right-[0px] h-full w-[1px] bg-gray-100 top-0"></span>
+        <span className="absolute right-[0px] h-full w-[1px] bg-white/20 top-0"></span>
       )}
     </th>
   );

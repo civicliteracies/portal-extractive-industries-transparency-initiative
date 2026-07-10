@@ -1,37 +1,34 @@
-import {  useState } from "react";
-import { useTheme } from "@/components/theme/theme-provider";
+import { FormEvent, useState } from "react";
 import { useSearchState } from "./SearchContext";
 
 export default function DatasetSearchForm() {
-  const { theme } = useTheme();
   const { setOptions, options } = useSearchState();
   const [q, setQ] = useState(options.query ?? "");
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setOptions({
       query: q,
+      offset: 0,
     });
-    return false;
   };
 
   return (
-    <form className="" onSubmit={handleSubmit}>
-      <div className="min-h-[70px] flex flex-col lg:flex-row bg-white pr-5 py-3 rounded-xl">
+    <form onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-3 p-5 lg:flex-row">
         <input
           type="text"
-          placeholder="Type in keyword..."
-          className="mx-4 grow py-3 border-0 placeholder:text-neutral-400 outline-0"
+          placeholder="Type in a keyword…"
+          className="h-12 grow rounded-md border border-eiti-borderinput bg-white px-4 text-[15px] text-eiti-ink placeholder:text-neutral-400 focus:border-accent focus:outline-none focus:ring-[3px] focus:ring-accent/10"
           name="query"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           aria-label="Search datasets"
         />
-
         <button
-          className={`font-bold border-b-[4px] border-accent text-white px-12 py-3 rounded-lg bg-accent hover:bg-cyan-500 duration-150 ${theme.styles.bgDark}`}
+          className="h-12 rounded-md border border-accent bg-accent px-8 text-[13px] font-bold uppercase tracking-label text-white transition-colors hover:bg-eiti-navy2"
           type="submit"
         >
-          SEARCH
+          Search
         </button>
       </div>
     </form>

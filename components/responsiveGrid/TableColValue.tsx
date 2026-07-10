@@ -8,7 +8,7 @@ export default function TableColumnValue({ column, value }) {
 
   return (
     <td
-      className={`px-3 py-4 text-sm text-gray-500 ${
+      className={`px-3 py-3 text-sm text-eiti-ink ${
         !isVisible ? "hidden" : ""
       } ${isPinned ? "sticky left-[-1px] bg-accent-50 z-10 font-medium" : ""}`}
       role="gridcell"

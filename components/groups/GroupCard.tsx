@@ -2,13 +2,21 @@ import getConfig from "next/config";
 import Image from "next/image";
 import Link from "next/link";
 import { Group } from "@portaljs/ckan";
-import { useTheme } from "../theme/theme-provider";
-import { ArrowRightIcon } from "@heroicons/react/20/solid";
+import { parseUrl } from "@/lib/utils";
 
 type GroupCardProps = Pick<
   Group,
   "display_name" | "image_display_url" | "description" | "name"
 >;
+
+function groupInitials(displayName: string): string {
+  return displayName
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
 
 export default function GroupCard({
   display_name,
@@ -16,38 +24,40 @@ export default function GroupCard({
   description,
   name,
 }: GroupCardProps) {
-  const { theme } = useTheme();
-  const url = image_display_url ? new URL(image_display_url) : undefined;
+  const url = parseUrl(image_display_url);
+  const hasCustomImage =
+    image_display_url &&
+    url &&
+    (getConfig().publicRuntimeConfig.DOMAINS ?? []).includes(url.hostname);
   return (
     <Link
-      href={`/groups/${name}`}
-      className={`bg-white hover:bg-accent-50 group border-b-[4px] border-white hover:border-accent p-8 col-span-3 rounded-lg block h-full text-accent  ${theme.styles.shadowSm}`}
+      href={`/categories/${name}`}
+      className="flex h-full flex-col gap-4 rounded-lg border border-eiti-border bg-white px-5 py-6 transition-all hover:border-eiti-borderinput hover:shadow-sm"
     >
-      <Image
-        src={
-          image_display_url &&
-          url &&
-          (getConfig().publicRuntimeConfig.DOMAINS ?? []).includes(url.hostname)
-            ? image_display_url
-            : "/images/logos/datasets.png"
-        }
-        alt={`${name}-collection`}
-        width="54"
-        height="54"
-      ></Image>
-      <div className={`text-black`}>
-        <h3 className="font-inter font-semibold text-lg mt-4 group-hover:text-accent">
+      {hasCustomImage ? (
+        <Image
+          src={image_display_url}
+          alt=""
+          width="40"
+          height="40"
+          className="rounded-md object-contain"
+        />
+      ) : (
+        <span className="grid h-10 w-10 place-items-center rounded-md bg-accent text-[13px] font-extrabold text-white">
+          {groupInitials(display_name || name)}
+        </span>
+      )}
+      <div>
+        <h3 className="text-[19px] font-extrabold text-accent">
           {display_name}
         </h3>
-        <p className="font-inter font-medium text-sm mt-1 mb-6 line-clamp-2">
+        <p className="mt-1 line-clamp-3 text-sm text-eiti-muted">
           {description}
         </p>
       </div>
-      <span
-        className={` font-inter font-medium text-sm flex items-center gap-2`}
-      >
-        View collection
-        <ArrowRightIcon width={16} />
+      <span className="mt-auto flex items-center justify-between text-sm font-bold text-accent">
+        View category
+        <span className="text-accent/40">&rarr;</span>
       </span>
     </Link>
   );

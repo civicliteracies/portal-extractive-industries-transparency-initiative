@@ -2,8 +2,8 @@ import nextSeoConfig, { imageUrl, siteTitle, url } from "@/next-seo.config";
 import { BreadcrumbJsonLd, LogoJsonLd, NextSeo, WebPageJsonLd, SiteLinksSearchBoxJsonLd } from "next-seo";
 
 export function GroupPageStructuredData() {
-  const title = "Groups"
-  const description = "Groups page of " + siteTitle
+  const title = "Categories"
+  const description = "Categories page of " + siteTitle
   return (
     <>
       <LogoJsonLd
@@ -39,7 +39,7 @@ export function GroupPageStructuredData() {
           },
           {
             position: 2,
-            name: 'Groups Page',
+            name: 'Categories Page',
             item: `${url}/groups`,
           },
         ]}

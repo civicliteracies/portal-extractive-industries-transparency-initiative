@@ -2,52 +2,67 @@ import { Organization } from "@portaljs/ckan";
 import getConfig from "next/config";
 import Image from "next/image";
 import Link from "next/link";
-
-import { RiArrowRightLine } from "react-icons/ri";
+import { parseUrl } from "@/lib/utils";
 
 type OrgCardProps = Pick<
   Organization,
   "display_name" | "image_display_url" | "description" | "name"
->;
+> & { packageCount?: number };
 
-export default function GroupCard({
+function orgInitials(displayName: string): string {
+  const words = displayName.replace(/^EITI\s+/i, "").split(/\s+/);
+  const initials =
+    words.length > 1 ? words.map((w) => w[0]).join("") : words[0] ?? "";
+  return initials.slice(0, 2).toUpperCase();
+}
+
+export default function OrgCard({
   display_name,
   image_display_url,
   description,
   name,
+  packageCount,
 }: OrgCardProps) {
-  const url = image_display_url ? new URL(image_display_url) : undefined;
+  const url = parseUrl(image_display_url);
+  const hasCustomImage =
+    image_display_url &&
+    url &&
+    (getConfig().publicRuntimeConfig.DOMAINS ?? []).includes(url.hostname);
   return (
     <Link
       href={`/@${name}`}
-      className="border-b-[4px] p-8 border-white  bg-white hover:bg-accent-50 group block border-b-[4px] hover:border-accent rounded-lg shadow-lg"
+      className="flex h-full items-center gap-4 rounded-lg border border-eiti-border bg-white px-5 py-4 transition-all hover:border-eiti-borderinput hover:shadow-sm"
     >
-      <div className=" col-span-3  h-full  flex flex-col ">
+      {hasCustomImage ? (
         <Image
-          src={
-            image_display_url &&
-            url &&
-            (getConfig().publicRuntimeConfig.DOMAINS ?? []).includes(
-              url.hostname
-            )
-              ? image_display_url
-              : "/images/logos/DefaultOrgLogo.svg"
-          }
-          alt={`${name}-collection`}
-          width="43"
-          height="43"
-        ></Image>
-        <h3 className="font-inter font-semibold text-lg mt-4 group-hover:text-accent">
-          {display_name}
-        </h3>
-        <p className="font-inter font-medium text-sm mt-1 mb-6 line-clamp-2">
-          {description}
-        </p>
-
-        <span className="font-inter mt-auto font-medium text-sm text-accent cursor-pointer flex items-center gap-1">
-          View <RiArrowRightLine />
+          src={image_display_url}
+          alt=""
+          width="40"
+          height="40"
+          className="flex-none rounded-md object-contain"
+        />
+      ) : (
+        <span className="grid h-10 w-10 flex-none place-items-center rounded-md bg-accent text-[13px] font-extrabold text-white">
+          {orgInitials(display_name || name)}
         </span>
-      </div>
+      )}
+      <span className="min-w-0">
+        <span className="block text-[15px] font-extrabold leading-snug text-accent">
+          {display_name}
+        </span>
+        {typeof packageCount === "number" ? (
+          <span className="mt-0.5 block text-xs text-eiti-muted tabular-nums">
+            {packageCount} {packageCount === 1 ? "dataset" : "datasets"}
+          </span>
+        ) : (
+          description && (
+            <span className="mt-0.5 block truncate text-xs text-eiti-muted">
+              {description}
+            </span>
+          )
+        )}
+      </span>
+      <span className="ml-auto flex-none text-accent/40">&rarr;</span>
     </Link>
   );
 }

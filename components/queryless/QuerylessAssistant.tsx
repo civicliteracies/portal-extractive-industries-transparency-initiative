@@ -44,7 +44,7 @@ function getPageDirective(
 
   if (pathname === "/") return "home";
   if (cleanPath === "/search") return "search";
-  if (cleanPath === "/groups" || cleanPath === "/organizations") return "search";
+  if (cleanPath === "/categories" || cleanPath === "/countries") return "search";
 
   if (first === "groups" && segments[1]) {
     return `group/${segments[1]}`;

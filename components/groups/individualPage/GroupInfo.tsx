@@ -2,73 +2,86 @@ import getConfig from "next/config";
 import Image from "next/image";
 import { Tag } from "@portaljs/ckan";
 import { Group } from "@portaljs/ckan";
-import { getTimeAgo } from "@/lib/utils";
+import { getTimeAgo, parseUrl } from "@/lib/utils";
+
+function groupInitials(displayName: string): string {
+  return displayName
+    .split(/\s+/)
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function MetaRow({ label, value }: { label: string; value: React.ReactNode }) {
+  return (
+    <div className="flex items-baseline justify-between gap-3 border-b border-eiti-bordersubtle py-2 text-sm last:border-b-0">
+      <span className="text-xs font-bold uppercase tracking-label text-eiti-muted">
+        {label}
+      </span>
+      <span className="text-right font-semibold text-eiti-ink tabular-nums">
+        {value}
+      </span>
+    </div>
+  );
+}
 
 export default function GroupInfo({ group }: { group: Group }) {
-  const url = group.image_display_url
-    ? new URL(group.image_display_url)
-    : undefined;
+  const url = parseUrl(group.image_display_url);
+  const hasCustomImage =
+    group.image_display_url &&
+    url &&
+    (getConfig().publicRuntimeConfig.DOMAINS ?? []).includes(url.hostname);
+
+  const description = group.description?.replace(/<\/?[^>]+(>|$)/g, "");
+
   return (
-    <div className="flex flex-col">
-      <Image
-        width={54}
-        height={56}
-        src={group.image_display_url}
-        alt={`${group.name}-collection`}
-        className="object-fit"
-      />
-      <div className="flex flex-col gap-y-3 mt-8">
-        <span className="font-medium text-gray-500 inline">
-          <svg
-            xmlns="http://www.w3.group/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-5 h-5 text-accent inline mr-1"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3.75 9.776c.112-.017.227-.026.344-.026h15.812c.117 0 .232.009.344.026m-16.5 0a2.25 2.25 0 00-1.883 2.542l.857 6a2.25 2.25 0 002.227 1.932H19.05a2.25 2.25 0 002.227-1.932l.857-6a2.25 2.25 0 00-1.883-2.542m-16.5 0V6A2.25 2.25 0 016 3.75h3.879a1.5 1.5 0 011.06.44l2.122 2.12a1.5 1.5 0 001.06.44H18A2.25 2.25 0 0120.25 9v.776"
-            />
-          </svg>
-          Packages: {group.package_count || 0}
-        </span>
-        <span className="font-medium text-gray-500 inline">
-          <svg
-            xmlns="http://www.w3.group/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="w-5 h-5 text-accent inline mr-1"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5m-9-6h.008v.008H12v-.008zM12 15h.008v.008H12V15zm0 2.25h.008v.008H12v-.008zM9.75 15h.008v.008H9.75V15zm0 2.25h.008v.008H9.75v-.008zM7.5 15h.008v.008H7.5V15zm0 2.25h.008v.008H7.5v-.008zm6.75-4.5h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V15zm0 2.25h.008v.008h-.008v-.008zm2.25-4.5h.008v.008H16.5v-.008zm0 2.25h.008v.008H16.5V15z"
-            />
-          </svg>
-          Created: {group.created && getTimeAgo(group.created)}
-        </span>
-      </div>
-      <div className="py-4 my-4 border-y">
-        <p className="text-sm font-normal text-stone-500 line-clamp-4">
-          {group.description?.replace(/<\/?[^>]+(>|$)/g, "") ||
-            "No description"}
-        </p>
-      </div>
-      <div className="flex flex-wrap gap-1">
-        {group.tags?.map((tag: Tag) => (
-          <span
-            className="bg-accent px-4 py-1 rounded-full text-white"
-            key={tag.id}
-          >
-            {tag.display_name}
+    <div className="rounded-lg border border-eiti-border bg-white p-5">
+      <div className="flex items-center gap-4">
+        {hasCustomImage ? (
+          <Image
+            width={56}
+            height={56}
+            src={group.image_display_url}
+            alt=""
+            className="rounded-md object-contain"
+          />
+        ) : (
+          <span className="grid h-14 w-14 flex-none place-items-center rounded-md bg-accent text-lg font-extrabold text-white">
+            {groupInitials(group.title || group.name || "")}
           </span>
-        ))}
+        )}
+        <span className="text-base font-extrabold text-accent">
+          {group.title || group.name}
+        </span>
       </div>
+      <div className="mt-4">
+        <MetaRow label="Datasets" value={group.package_count || 0} />
+        {group.created && (
+          <MetaRow label="Created" value={getTimeAgo(group.created)} />
+        )}
+      </div>
+      <div className="mt-4">
+        {description ? (
+          <p className="line-clamp-4 text-sm text-eiti-muted">{description}</p>
+        ) : (
+          <p className="text-sm text-eiti-muted">
+            <span className="opacity-40">&mdash;</span> No description provided
+          </p>
+        )}
+      </div>
+      {!!group.tags?.length && (
+        <div className="mt-4 flex flex-wrap gap-1.5">
+          {group.tags.map((tag: Tag) => (
+            <span
+              className="rounded-full border border-eiti-borderinput bg-white px-3 py-1 text-xs font-semibold text-accent"
+              key={tag.id}
+            >
+              {tag.display_name}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

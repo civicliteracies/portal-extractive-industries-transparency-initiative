@@ -1,6 +1,4 @@
-import { useState } from "react";
 import Pagination from "./Pagination";
-import Image from "next/image";
 import { useRouter } from "next/router";
 
 import { useSearchState } from "./SearchContext";
@@ -18,26 +16,28 @@ export default function ListOfDatasets() {
 function ListItems() {
   const { options, setOptions, searchResults, isLoading } = useSearchState();
 
-  const [subsetOfPages, setSubsetOfPages] = useState(0);
-
   return (
     <>
       <div className="flex justify-between flex-col md:flex-row md:items-center flex-wrap gap-3">
         <div className="flex gap-2">
-          <h2 className="text-[23px] leading-[28px] capitalize font-bold  ">
-            {searchResults?.count}{" "}
-            {options.type === "visualization" ? "Visualizations" : "Datasets"}
+          <h2 className="text-[15px] font-normal text-eiti-ink">
+            <span className="text-[19px] font-extrabold text-accent tabular-nums">
+              {searchResults?.count}
+            </span>{" "}
+            {options.type === "visualization" ? "visualizations" : "datasets"}{" "}
+            matched
           </h2>
         </div>
         <div className="flex gap-2 cursor-pointer">
-          <div className="font-normal text-[14px]">
-            Sort by:{" "}
+          <div className="flex items-center gap-2 text-[13px] text-eiti-muted">
+            Sort by
             <select
+              className="h-9 rounded-md border border-eiti-borderinput bg-white px-3 text-[13px] font-bold text-accent focus:outline-none focus:border-accent"
               aria-label="Sort datasets by"
               value={options.sort ?? "score desc"}
               onChange={(e) => {
                 const value = e.target.value;
-                setOptions({ sort: value });
+                setOptions({ sort: value, offset: 0 });
               }}
             >
               <option value="score desc">Most relevant</option>
@@ -50,7 +50,7 @@ function ListItems() {
       </div>
 
       <FilterBadges />
-      <div className="flex flex-col gap-8 mt-4">
+      <div className="flex flex-col gap-3 mt-4">
         {searchResults?.datasets?.map((dataset) => (
           <DatasetItem key={dataset.id} dataset={dataset} />
         ))}
@@ -60,8 +60,6 @@ function ListItems() {
         <PackagePagination
           isLoading={isLoading}
           count={searchResults?.count}
-          subsetOfPages={subsetOfPages}
-          setSubsetOfPages={setSubsetOfPages}
         />
       </div>
     </>
@@ -100,7 +98,7 @@ function FilterBadges() {
     }, 0);
 
   return (
-    <div className="border-b border-gray-100 pb-2">
+    <div className="border-b border-eiti-bordersubtle pb-2">
       {!!activeFiltersCount && (
         <span className="text-xs  text-gray-800 mb-2 inline-block">
           Applied Filters{" "}
@@ -176,7 +174,7 @@ function FilterBadges() {
                 tags: []
               });
             }}
-            className="inline-flex h-fit w-fit cursor-pointer ml-auto items-center gap-x-0.5 rounded-md bg-gray-900 px-2 py-1 text-xs font-medium text-white ring-1 ring-inset ring-gray-500/10"
+            className="inline-flex h-fit w-fit cursor-pointer ml-auto items-center gap-x-1 rounded-full border border-eiti-borderinput bg-white px-3 py-1 text-xs font-semibold text-accent transition-colors hover:bg-accent hover:text-white"
           >
             clear all
             <button
@@ -193,28 +191,14 @@ function FilterBadges() {
   );
 }
 
-function PackagePagination({
-  isLoading,
-  count,
-  subsetOfPages,
-  setSubsetOfPages,
-}) {
+function PackagePagination({ isLoading, count }) {
   if (isLoading) return null;
 
   if (count > 0) {
-    return (
-      <Pagination
-        subsetOfPages={subsetOfPages}
-        setSubsetOfPages={setSubsetOfPages}
-        count={count}
-      />
-    );
-
-    return <ResultsNotFound />;
+    return <Pagination count={count} />;
   }
 
-  // make a pagination component once insights are added
-  return null;
+  return <ResultsNotFound />;
 }
 
 function ResultsNotFound() {
@@ -224,31 +208,23 @@ function ResultsNotFound() {
     router.push("/search", undefined, { shallow: true });
   };
   return (
-    <div className="mt-5 flex flex-col items-center rounded-[20px] border border-[#F7F7F7] bg-white gap-4 px-20">
-      <Image
-        src={"/images/search/noDatasets.svg"}
-        height={269}
-        width={358}
-        alt="no datasets found"
-      />
+    <div className="mt-5 flex flex-col items-center rounded-lg border border-eiti-border bg-white gap-4 px-8 py-14 md:px-20">
       <div className="flex flex-col items-center gap-2">
-        <span className="text-[#313131] font-medium text-[18px] leading-[23px]">
-          No datasets found.
+        <span className="text-accent font-extrabold text-[18px] leading-[23px]">
+          No datasets found
         </span>
-        <span className="text-[#4C4C4C] text-center font-normal text-[15px] leading-[20px]">
-          It looks like no datasets match your current search criteria. Try
-          reducing the number of filters or broadening your search terms and
-          give it another go.
+        <span className="text-eiti-muted text-center font-normal text-[15px] leading-[20px] max-w-[52ch]">
+          No datasets match your current search. Try removing filters or
+          broadening your search terms.
         </span>
       </div>
-      <div
+      <button
         onClick={clearFilters}
-        className="cursor-pointer rounded-[20px] w-[118px] h-[41px] bg-[linear-gradient(90deg,_#489FA9_0%,_#803D6E_100%)] flex items-center justify-center"
+        type="button"
+        className="rounded-md bg-accent hover:bg-eiti-navy2 transition-colors px-6 h-[44px] flex items-center justify-center text-white text-[13px] font-bold uppercase tracking-label"
       >
-        <span className="text-white font-medium text-[16px] leading-normal">
-          Clear fitlers
-        </span>
-      </div>
+        Clear filters
+      </button>
     </div>
   );
 }
@@ -265,7 +241,7 @@ function ActiveFilter({
       onClick={() => {
         onClick();
       }}
-      className="inline-flex items-center cursor-pointer gap-x-0.5 rounded-md bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
+      className="inline-flex items-center cursor-pointer gap-x-1 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-white transition-colors hover:bg-eiti-navy2"
     >
       {label}
       <button

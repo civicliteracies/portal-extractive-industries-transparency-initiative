@@ -1,78 +1,63 @@
-import { useTheme } from "@/components/theme/theme-provider";
 import { Dispatch, SetStateAction } from "react";
+import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
 
 export default function SearchHero({
   title,
+  subtitle,
   searchValue,
   onChange,
 }: {
   title: string;
+  subtitle?: string;
   searchValue: string;
   onChange: Dispatch<SetStateAction<string>>;
 }) {
-  const {
-    theme: { styles },
-  } = useTheme();
   return (
     <>
-      <section className="row-start-1 row-span-3 col-span-full">
-        <div
-          className="bg-cover bg-center bg-no-repeat  pt-[60px] pb-[36px] flex flex-col"
-          style={{}}
-        >
-          <div className="grid md:grid-cols-2 mx-auto items-center grow mx-auto custom-container bg-white">
-            <div className="col-span-1">
-              <h1 className="text-[55px] font-black ">{title}</h1>
-            </div>
-          </div>
+      <section>
+        <div className="custom-container mx-auto pt-12 pb-8">
+          <span className="text-xs font-bold uppercase tracking-label text-accent">
+            Home <span className="opacity-40">&rsaquo;</span> {title}
+          </span>
+          <h1 className="mt-2 text-3xl md:text-[44px] font-extrabold leading-[1.12] tracking-tight text-accent capitalize">
+            {title}
+          </h1>
+          {subtitle && (
+            <p className="mt-3 max-w-[62ch] text-base text-eiti-muted">
+              {subtitle}
+            </p>
+          )}
         </div>
       </section>
-      <section className={`grid row-start-3 row-span-2 col-span-full pt-4 `}>
-        <div className={`custom-container bg-white ${styles.shadowMd}`}>
-          <div className="">
-            <form className="min-h-[70px] flex flex-col lg:flex-row bg-white pr-5 py-3 rounded-xl" onSubmit={e => {
-              e.preventDefault();
-              return false;
-            }}>
-              <input
-                type="text"
-                placeholder={`Search for ${title}`}
-                className="mx-4 grow py-3 border-0 placeholder:text-neutral-400 outline-0"
-                id="search2"
-                name="search"
-                onChange={(e) => {
-                  onChange(e.target.value);
-                }}
-                value={searchValue}
-                aria-label={`Search ${title}`}
-              />
-              <button
-                type="submit"
-                className="sr-only"
-              >
-                Submit
-              </button>
-            </form>
-          </div>
-        </div>
+      <section className="custom-container mx-auto pb-8">
+        <form
+          className="relative max-w-[560px]"
+          onSubmit={(e) => {
+            e.preventDefault();
+            return false;
+          }}
+        >
+          <MagnifyingGlassIcon
+            width={20}
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-eiti-muted"
+          />
+          <input
+            type="text"
+            placeholder={`Find ${title.toLowerCase()}…`}
+            className="h-12 w-full rounded-md border border-eiti-borderinput bg-white pl-11 pr-4 text-[15px] text-eiti-ink placeholder:text-neutral-400 focus:border-accent focus:outline-none focus:ring-[3px] focus:ring-accent/10"
+            id="search2"
+            name="search"
+            onChange={(e) => {
+              onChange(e.target.value);
+            }}
+            value={searchValue}
+            aria-label={`Search ${title}`}
+          />
+          <button type="submit" className="sr-only">
+            Submit
+          </button>
+        </form>
       </section>
     </>
   );
 }
-/*<div className="grid md:grid-cols-2 mx-auto items-center grow custom-container grow">
-      <div className="col-span-1">
-        <h1 className="text-5xl font-black ">{title}</h1>
-        <input
-          id="search2"
-          type="search"
-          name="search"
-          onChange={(e) => {
-            onChange(e.target.value);
-          }}
-          value={searchValue}
-          placeholder="Search..."
-          aria-label="Search"
-          className="w-3/4 px-3 py-4 mt-8 border border-accent rounded-md leading-none bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-accent focus:border-accent"
-        />
-      </div>
-    </div>*/
