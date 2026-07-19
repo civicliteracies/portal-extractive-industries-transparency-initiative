@@ -20,7 +20,7 @@ export default function HeroSection({
             {eyebrow}
           </span>
         )}
-        <h1 className="mt-2 text-3xl md:text-[44px] font-extrabold leading-[1.12] tracking-tight text-accent capitalize">
+        <h1 className="mt-2 text-3xl md:text-[44px] font-extrabold leading-[1.12] tracking-tight text-accent capitalize break-words">
           {title}{" "}
           {titleAccent && <span className="text-eiti-navy2">{titleAccent}</span>}
         </h1>

@@ -75,7 +75,7 @@ function SearchPageContent() {
           <div className="lg:col-span-3 lg:sticky top-3 h-fit">
             <DatasetSearchFilters />
           </div>
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-6 min-w-0">
             <ListOfDatasets />
           </div>
         </article>

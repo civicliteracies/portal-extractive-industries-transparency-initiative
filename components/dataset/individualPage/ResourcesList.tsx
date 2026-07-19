@@ -21,7 +21,7 @@ export default function ResourcesList({
           className="flex w-full flex-col gap-4 rounded-lg border border-eiti-border bg-white px-5 py-4 md:flex-row md:items-center md:justify-between"
         >
           <div className="min-w-0 grow">
-            <h4 className="text-[15px] font-bold leading-snug text-accent line-clamp-3">
+            <h4 className="text-[15px] font-bold leading-snug text-accent line-clamp-3 break-words">
               {resource.name || "No title"}
             </h4>
             {resource.description ? (

@@ -124,7 +124,7 @@ export default function MainSection({
             allHref="/search"
             allLabel="All datasets"
           />
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {datasets
               .filter((dataset) => dataset.organization?.name)
               .slice(0, 3)
@@ -132,15 +132,15 @@ export default function MainSection({
               <Link
                 key={dataset.id}
                 href={`/@${dataset.organization?.name}/${dataset.name}`}
-                className="flex min-h-[128px] flex-col justify-between rounded-lg border border-eiti-border border-l-2 border-l-eiti-amber bg-white px-5 py-4 transition-all hover:border-eiti-borderinput hover:shadow-sm"
+                className="flex min-h-[128px] min-w-0 flex-col justify-between rounded-lg border border-eiti-border border-l-2 border-l-eiti-amber bg-white px-5 py-4 transition-all hover:border-eiti-borderinput hover:shadow-sm"
               >
-                <div>
+                <div className="min-w-0">
                   {dataset.metadata_modified && (
                     <div className="mb-1 text-[10px] font-bold uppercase tracking-label text-eiti-amberink">
                       Updated {getTimeAgo(dataset.metadata_modified)}
                     </div>
                   )}
-                  <div className="text-base font-extrabold leading-snug text-accent">
+                  <div className="text-base font-extrabold leading-snug text-accent break-words">
                     {dataset.title || dataset.name}
                   </div>
                 </div>

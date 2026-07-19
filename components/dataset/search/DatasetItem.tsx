@@ -15,7 +15,7 @@ export default function DatasetItem({
       href={`/@${dataset.organization.name}/${dataset.name}`}
       className="group block rounded-lg border border-eiti-border bg-white p-5 transition-all hover:border-eiti-borderinput hover:shadow-sm"
     >
-      <div className="text-[17px] font-extrabold leading-snug text-accent">
+      <div className="text-[17px] font-extrabold leading-snug text-accent break-words">
         <span className="border-b-2 border-transparent group-hover:border-eiti-amber">
           {dataset.title}
         </span>
